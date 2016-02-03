@@ -62,34 +62,44 @@ function create(){
 
 //*********** Read file *****************
 //Read file and split by line
-
+/*
 function openFile(event) {
     var input = event.target;
+    var data=[];
     
-alert('i[0].name');
     var reader = new FileReader();
     reader.onload = function(){
       var text = reader.result;
-      var lines = text.split("\n");
-        var i[];
-i.add({name:"fin"});
+      var lines = text.split("\r\n");
+       
     for(var line = 0; line < lines.length; line++){
-      readByLine(lines[line]);
+     data.push(readByLine(lines[line]));
     }
         
+    
+    function readByLine(line){
+        var attribute = line.split(',');
+        var obj ={};
+        for(var item = 0; item < attribute.length; item++){
+            var buddle = attribute[item].split(':');
+            var key = buddle[0];
+            var value = buddle[1]
+            obj[key] = value;
+        }
+        return obj;
+    
+    }
         
     };
     reader.readAsText(input.files[0]);
+    return data;
   };
-
+*/
 //------------------------------------------
 
 //*************** Split Line by colone***********
 
-function readByLine(line){
-    var attribute = line.split(',');
-    
-}
+
 
 
 //----------------------------------------------
