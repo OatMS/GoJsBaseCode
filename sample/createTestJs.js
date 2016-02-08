@@ -148,7 +148,10 @@ function openFile(event) {
 */
 
 var selectedNode=[];
-
+var JsonData=[];     
+var diagramGlobal;
+var myDiagram;
+var $ = go.GraphObject.make;
 
 
 function clickNode(ctrl,node){
@@ -194,11 +197,7 @@ function addNodeAndLink(e, b) {
 
 //oat edit
       
-      var JsonData=[];
-      
-      var diagramGlobal;
-        var myDiagram;
-                
+             
               
 
       
@@ -208,7 +207,7 @@ function init(data) {
             
         
       //if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
-      var $ = go.GraphObject.make;
+      
       myDiagram =
         $(go.Diagram, "myDiagram",
           {
@@ -228,6 +227,8 @@ function init(data) {
             layout:  // use a custom layout, defined below
               $(GenogramLayout, { direction: 90, layerSpacing: 30, columnSpacing: 10 })
           });
+    
+    
     
    
     
@@ -380,6 +381,39 @@ function init(data) {
             new go.Binding("text", "n"))
         ));
 
+    
+    
+    myDiagram.nodeTemplate =$(go.Node, "Vertical",
+          { locationSpot: go.Spot.Center, locationObjectName: "ICON" },{
+          doubleClick:  
+        function(e, node) { alert("key : "+node.data.key+"\nName : "+node.data.n); },
+          click:function(e,node){
+              clickNode(window.event.ctrlKey,node)
+          }
+      },
+          
+          $(go.Panel,
+            { name: "ICON" },
+            $(go.Shape, "Circle",
+              { width: 40, height: 40, strokeWidth: 2, fill: "white", portId: "" }),
+            $(go.Panel,
+              { // for each attribute show a Shape at a particular place in the overall circle
+                itemTemplate:
+                  $(go.Panel,
+                    $(go.Shape,
+                      { stroke: null, strokeWidth: 0 },
+                      new go.Binding("fill", "", attrFill),
+                      new go.Binding("geometry", "", femaleGeometry))
+                  ),
+                margin: 1
+              },
+              new go.Binding("itemArray", "a")
+            )
+          ),
+          $(go.TextBlock,
+            { textAlign: "center", maxSize: new go.Size(80, NaN) },
+            new go.Binding("text", "n"))
+        );
       // the representation of each label node -- nothing shows on a Marriage L ink
       myDiagram.nodeTemplateMap.add("LinkLabel",
         $(go.Node, { selectable: false, width: 1, height: 1, fromEndSegmentLength: 20 }));
@@ -741,7 +775,18 @@ myDiagram.contextMenu =
       
       
 
-//************************
+//*************
+//***********
+
+function addNode(data){
+    myDiagram.startTransaction('new node');
+          var data = {key:5,n: New,s:F,m:2,f:3,a:[B,H]};
+          myDiagram.model.addNodeData(data);
+          part = myDiagram.findPartForData(data);
+          part.location =               myDiagram.toolManager.contextMenuTool.mouseDownPoint;
+          myDiagram.commitTransaction('new node');
+}
+
 
 
       
