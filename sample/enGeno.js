@@ -29,10 +29,13 @@ function resetClick(){
     selectedNode=[];
 }
 
-function alertHello(){
-    
-    alert("Hello");
+function doubleClickNode(e,b){
+    var node = b.part.adornedPart;
+    prompt("Name : ",node.data.n);
 }
+
+
+
 
 function setContextNode(){
     var contextNode;
@@ -51,7 +54,7 @@ function setContextNode(){
              ),
             $("ContextMenuButton",
               $(go.TextBlock, "Edit Node"),
-              { click: editNode }
+              {click : editNode }
              )
                     
             // more ContextMenuButtons would go here
@@ -118,9 +121,17 @@ function addChild(e, b) {
     myDiagram.commitTransaction("add node and link");
   }
 
-function deitNode(e,b){
-    var node = b.part.adornedPart;
-   
+function editNode(e,b){
+    
+   var node =  b.part.adornedPart.data;
+   var newName = prompt("Name : ",b.part.adornedPart.data.n);
+    
+    
+      myDiagram.model.startTransaction("modified Node")
+      myDiagram.model.setDataProperty(node, "n", newName);
+      myDiagram.model.commitTransaction("modified Node");
+ 
+    
     
     
 }
@@ -158,10 +169,10 @@ function addSpouse(e,b){
 //oat edit
       
              
-              
+  
 
-      
-function init(data) {
+
+function init(data) {1
         
     alert(JSON.stringify(data));
             
@@ -282,9 +293,7 @@ function init(data) {
       myDiagram.nodeTemplateMap.add("M",  // male
         $(go.Node, "Vertical",
           { locationSpot: go.Spot.Center, locationObjectName: "ICON" },{
-          doubleClick:  
-        function(e, node) { alert("key : "+node.data.key+"\nName : "+node.data.n);
-          },
+          doubleClick: doubleClickNode,
           click:function(e,node){
               clickNode(window.event.ctrlKey,node)
           },selectionAdornmentTemplate:
@@ -325,8 +334,7 @@ function init(data) {
       myDiagram.nodeTemplateMap.add("F",  // female
         $(go.Node, "Vertical",
           { locationSpot: go.Spot.Center, locationObjectName: "ICON" },{
-          doubleClick:  
-        function(e, node) { alert("key : "+node.data.key+"\nName : "+node.data.n); },
+          doubleClick: doubleClickNode,
           click:function(e,node){
               clickNode(window.event.ctrlKey,node)
           }
