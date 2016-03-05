@@ -6,35 +6,6 @@ var myDiagram;
 var $ = go.GraphObject.make;
 
 
-function clickNode(ctrl,node){
-  //  e = window.event;
-  
-    var link = node.findTreeParentLink() ;
-    if(link!== null){
-     
-    }
-  if (!ctrl) {
-    selectedNode =[];
-      
-  }
-    selectedNode.push(node);
-   
-}
-
-function getSelectedNode(){
-    return selectedNode;
-}
-
-function resetClick(){
-    selectedNode=[];
-}
-
-function doubleClickNode(e,b){
-    var node = b.part.adornedPart;
-    prompt("Name : ",node.data.n);
-}
-
-
 
 
 function setContextNode(){
@@ -116,28 +87,16 @@ function addChild(e, b) {
    // var newlink = { from: node.data.key, to: newnode.key };
     
     myDiagram.model.addLinkData(cdata);
-    myDiagram.model.addLinkData(newlink);
+ //   myDiagram.model.addLinkData(newlink);
     // finish the transaction
     myDiagram.commitTransaction("add node and link");
   }
 
-function editNode(e,b){
-    
-   var node =  b.part.adornedPart.data;
-   var newName = prompt("Name : ",b.part.adornedPart.data.n);
-    
-    
-      myDiagram.model.startTransaction("modified Node")
-      myDiagram.model.setDataProperty(node, "n", newName);
-      myDiagram.model.commitTransaction("modified Node");
- 
-    
-    
-    
-}
+
 
 function addSpouse(e,b){
      var node = b.part.adornedPart;
+   
     var newnode = {n:"Spouse",cou:node.data.key};
     if(node.data.s == "M"){
         
@@ -169,65 +128,55 @@ function addSpouse(e,b){
 //oat edit
       
              
-  
 
-
-function init(data) {1
+/*
+function init(data) {
         
-    alert(JSON.stringify(data));
-            
+  //  alert(JSON.stringify(data));
+     
         
       //if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
       
       myDiagram =
-        $(go.Diagram, "myDiagram",
+        $(go.Diagram, 
           {
             initialAutoScale: go.Diagram.Uniform,
             initialContentAlignment: go.Spot.Center,
             // when a node is selected, draw a big yellow circle behind it
-          click:resetClick,
             nodeSelectionAdornmentTemplate:
           
               $(go.Adornment, "Auto",
                 { layerName: "Grid" },  // the predefined layer that is behind everything else
                 $(go.Shape, "Circle", { fill: "yellow", stroke: null } ),
                 $(go.Placeholder)
-                  
-                
-//----------------------------------------
-                
-//-----------------------------------------
                
                ),
-          
       
             layout:  // use a custom layout, defined below
               $(GenogramLayout, { direction: 90, layerSpacing: 30, columnSpacing: 10 })
-          
-          
           });
     
     
     
    myDiagram.allowDrop = true;
     
-   
+   myDiagram.div = document.getElementById("myDiagram");
 
       // determine the color for each attribute shape
       function attrFill(a) {
         switch (a) {
-          case "A": return "green";
-          case "B": return "orange";
-          case "C": return "red";
-          case "D": return "cyan";
-          case "E": return "gold";
-          case "F": return "pink";
-          case "G": return "blue";
-          case "H": return "brown";
-          case "I": return "purple";
-          case "J": return "chartreuse";
-          case "K": return "lightgray";
-          case "L": return "magenta";
+          case "A": return "#0000FE";
+          case "B": return "#FF00FF";
+          case "C": return "#FE0000";
+          case "D": return "#C00000";
+          case "E": return "#C00000";
+          case "F": return "#FFC000";
+          case "G": return "#01FF00";
+          case "H": return "#800080";
+          case "I": return "#939FBB";
+          case "J": return "#01FFFF";
+          case "K": return "#359AFF";
+          case "L": return "#FFFF00";  
           case "S": return "red";
           default: return "transparent";
         }
@@ -235,7 +184,7 @@ function init(data) {1
 
       // determine the geometry for each attribute shape in a male;
       // except for the slash these are all squares at each of the four corners of the overall square
-      var tlsq = go.Geometry.parse("F M1 1 l19 0 0 19 -19 0z");
+      var tlsq = go.Geometry .parse("F M1 1 l19 0 0 19 -19 0z");
       var trsq = go.Geometry.parse("F M20 1 l19 0 0 19 -19 0z");
       var brsq = go.Geometry.parse("F M20 20 l19 0 0 19 -19 0z");
       var blsq = go.Geometry.parse("F M1 20 l19 0 0 19 -19 0z");
@@ -397,7 +346,7 @@ function init(data) {1
 
       // n: name, s: sex, m: mother, f: father, ux: wife, vir: husband, a: attributesขข/markers
     
-      setupDiagram(myDiagram, data,1 /* focus on this person */);
+      setupDiagram(myDiagram, data,1);
     
 
   
@@ -405,7 +354,7 @@ function init(data) {1
 }
 
 
-
+*/
 
     // create and initialize the Diagram.model given an array of node data representing people
     function setupDiagram(diagram, array, focusId) {
@@ -421,7 +370,7 @@ function init(data) {1
       setupMarriages(diagram);
       setupParents(diagram);
         
-        myDiagram =diagram;
+        
 
       var node = diagram.findNodeForKey(focusId);
       if (node !== null) {
@@ -439,6 +388,7 @@ function init(data) {1
       }
     }
 
+
     function findMarriage(diagram, a, b) {  // A and B are node keys
       var nodeA = diagram.findNodeForKey(a);
       var nodeB = diagram.findNodeForKey(b);
@@ -452,6 +402,8 @@ function init(data) {1
       }
       return null;
     }
+
+
 
     // now process the node data to determine marriages
     function setupMarriages(diagram) {
@@ -529,8 +481,6 @@ function init(data) {1
           */
       }
         
-         //oat edit
-      diagramGlobal =  diagram;
         
     }
 
@@ -726,9 +676,13 @@ function addNode(data){
 
       
 //******************************
-
+/*
 function openFile(event) {
+    var data=[];
+   var text;
+  
     var input = event.target;
+    alert(input);
     var data=[];
     
     var reader = new FileReader();
@@ -751,6 +705,12 @@ function openFile(event) {
             var buddle = attribute[item].split(':');
             var key = buddle[0];
             var value = buddle[1]
+            
+            //if Attribute a
+            if(key == 'a'){
+                value = value.split('');
+            }
+            
             obj[key] = value;
         }
         return obj;
@@ -761,8 +721,10 @@ function openFile(event) {
     };
     reader.readAsText(input.files[0]);
     
+    
+    return data;
   };
-
+*/
 //*************************
 
 function changeData(){
@@ -773,3 +735,295 @@ function changeData(){
      setupDiagram(myDiagram, newData,1 /* focus on this person */);
     
 }
+
+
+//---------------API----------------------------
+
+function Genogram(agr,div){
+    var data;
+    var diagram;
+    var read = false;
+    if(agr.type == 'file'){
+
+            
+        
+    console.log("in if");
+   data=[];
+   var text;
+  
+    var input = agr;
+    var reader = new FileReader();
+    reader.onload = function(){
+      var text = reader.result;
+      var lines = text.split("\r\n");
+       
+    for(var line = 0; line < lines.length; line++){
+        
+     data.push(readByLine(lines[line]));
+       
+    }
+        read = true;
+       console.log(JSON.stringify(data));
+       initGenogram(data,diagram);
+      
+    
+    function readByLine(line){
+        var attribute = line.split(',');
+        var obj ={};
+        for(var item = 0; item < attribute.length; item++){
+            var buddle = attribute[item].split(':');
+            var key = buddle[0];
+            var value = buddle[1]
+            
+            //if Attribute a
+            if(key == 'a'){
+                value = value.split('');
+            }
+            
+            obj[key] = value;
+        }
+        return obj;
+    
+    }
+                      
+    };
+    reader.readAsText(input.files[0]);
+      
+        while(!read){
+            function time(){for(var i=0 ;i<10;i++);}
+            setTimeout(time,500);
+        }
+       
+        
+    }else if(typeof data == 'object'){
+        
+    }else{
+        
+    }
+   
+    //*--
+ 
+    //**--
+   
+    function initGenogram(data,diagram){
+        diagram = $(go.Diagram, "myDiagram",
+          {
+            initialAutoScale: go.Diagram.Uniform,
+            initialContentAlignment: go.Spot.Center,
+            // when a node is selected, draw a big yellow circle behind it
+            nodeSelectionAdornmentTemplate:
+          
+              $(go.Adornment, "Auto",
+                { layerName: "Grid" },  // the predefined layer that is behind everything else
+                $(go.Shape, "Circle", { fill: "yellow", stroke: null } ),
+                $(go.Placeholder)
+               
+               ),
+      
+            layout:  // use a custom layout, defined below
+              $(GenogramLayout, { direction: 90, layerSpacing: 30, columnSpacing: 10 })
+          });
+    
+    if(div != null){
+      //   diagram.div = div;
+    }
+    
+  //  diagram.div = document.getElementById("myDiagram");
+    
+   diagram.allowDrop = true;
+    
+  
+
+      // determine the color for each attribute shape
+      function attrFill(a) {
+        switch (a) {
+          case "A": return "#0000FE";
+          case "B": return "#FF00FF";
+          case "C": return "#FE0000";
+          case "D": return "#C00000";
+          case "E": return "#C00000";
+          case "F": return "#FFC000";
+          case "G": return "#01FF00";
+          case "H": return "#800080";
+          case "I": return "#939FBB";
+          case "J": return "#01FFFF";
+          case "K": return "#359AFF";
+          case "L": return "#FFFF00";  
+          case "S": return "red";
+          default: return "transparent";
+        }
+      }
+
+      // determine the geometry for each attribute shape in a male;
+      // except for the slash these are all squares at each of the four corners of the overall square
+      var tlsq = go.Geometry .parse("F M1 1 l19 0 0 19 -19 0z");
+      var trsq = go.Geometry.parse("F M20 1 l19 0 0 19 -19 0z");
+      var brsq = go.Geometry.parse("F M20 20 l19 0 0 19 -19 0z");
+      var blsq = go.Geometry.parse("F M1 20 l19 0 0 19 -19 0z");
+      var slash = go.Geometry.parse("F M38 0 L40 0 40 2 2 40 0 40 0 38z");
+      function maleGeometry(a) {
+        switch (a) {
+          case "A": return tlsq;
+          case "B": return tlsq;
+          case "C": return tlsq;
+          case "D": return trsq;
+          case "E": return trsq;
+          case "F": return trsq;
+          case "G": return brsq;
+          case "H": return brsq;
+          case "I": return brsq;
+          case "J": return blsq;
+          case "K": return blsq;
+          case "L": return blsq;
+          case "S": return slash;
+          default: return tlsq;
+        }
+      }
+
+      // determine the geometry for each attribute shape in a female;
+      // except for the slash these are all pie shapes at each of the four quadrants of the overall circle
+      var tlarc = go.Geometry.parse("F M20 20 B 180 90 20 20 19 19 z");
+      var trarc = go.Geometry.parse("F M20 20 B 270 90 20 20 19 19 z");
+      var brarc = go.Geometry.parse("F M20 20 B 0 90 20 20 19 19 z");
+      var blarc = go.Geometry.parse("F M20 20 B 90 90 20 20 19 19 z");
+      function femaleGeometry(a) {
+        switch (a) {
+          case "A": return tlarc;
+          case "B": return tlarc;
+          case "C": return tlarc;
+          case "D": return trarc;
+          case "E": return trarc;
+          case "F": return trarc;
+          case "G": return brarc;
+          case "H": return brarc;
+          case "I": return brarc;
+          case "J": return blarc;
+          case "K": return blarc;
+          case "L": return blarc;
+          case "S": return slash;
+          default: return tlarc;
+        }
+      }
+
+    
+    
+    
+
+      // two different node templates, one for each sex,
+      // named by the category value in the node data object
+      diagram.nodeTemplateMap.add("M",  // male
+        $(go.Node, "Vertical",
+          { locationSpot: go.Spot.Center, locationObjectName: "ICON" },{
+          doubleClick: doubleClickNode,
+          click:function(e,node){
+              clickNode(window.event.ctrlKey,node)
+          },selectionAdornmentTemplate:
+          $(go.Adornment, "Spot",
+            $(go.Panel, "Auto",
+              // this Adornment has a rectangular blue Shape around the selected node
+              $(go.Shape, { fill: null, stroke: "dodgerblue", strokeWidth: 3 }),
+              $(go.Placeholder)
+            )
+          ),
+          contextMenu:   setContextNode()  // define a context menu for each node
+      },
+          $(go.Panel,
+            { name: "ICON" },
+            $(go.Shape, "Square",
+              { width: 40, height: 40, strokeWidth: 2, fill: "white", portId: "" }),
+            $(go.Panel,
+              { // for each attribute show a Shape at a particular place in the overall square
+                itemTemplate:
+                  $(go.Panel,
+                    $(go.Shape,
+                      { stroke: null, strokeWidth: 0 },
+                      new go.Binding("fill", "", attrFill),
+                      new go.Binding("geometry", "", maleGeometry))
+                  ),
+                margin: 1
+              },
+              new go.Binding("itemArray", "a")
+            )
+          ),
+          $(go.TextBlock,
+            { textAlign: "center", maxSize: new go.Size(80, NaN) },
+            new go.Binding("text", "n"))
+          
+          
+        ));
+
+      diagram.nodeTemplateMap.add("F",  // female
+        $(go.Node, "Vertical",
+          { locationSpot: go.Spot.Center, locationObjectName: "ICON" },{
+          doubleClick: doubleClickNode,
+          click:function(e,node){
+              clickNode(window.event.ctrlKey,node)
+          }
+          ,selectionAdornmentTemplate:
+          $(go.Adornment, "Spot",
+            $(go.Panel, "Auto",
+              // this Adornment has a rectangular blue Shape around the selected node
+              $(go.Shape, { fill: null, stroke: "dodgerblue", strokeWidth: 3 }),
+              $(go.Placeholder)
+            )
+          ),
+          contextMenu:   setContextNode()
+      },
+          
+          $(go.Panel,
+            { name: "ICON" },
+            $(go.Shape, "Circle",
+              { width: 40, height: 40, strokeWidth: 2, fill: "white", portId: "" }),
+            $(go.Panel,
+              { // for each attribute show a Shape at a particular place in the overall circle
+                itemTemplate:
+                  $(go.Panel,
+                    $(go.Shape,
+                      { stroke: null, strokeWidth: 0 },
+                      new go.Binding("fill", "", attrFill),
+                      new go.Binding("geometry", "", femaleGeometry))
+                  ),
+                margin: 1
+              },
+              new go.Binding("itemArray", "a")
+            )
+          ),
+          $(go.TextBlock,
+            { textAlign: "center", maxSize: new go.Size(80, NaN) },
+            new go.Binding("text", "n"))
+        ));
+
+    
+    
+      // the representation of each label node -- nothing shows on a Marriage L ink
+      diagram.nodeTemplateMap.add("LinkLabel",
+        $(go.Node, { selectable: false, width: 1, height: 1, fromEndSegmentLength: 20 }));
+
+
+      diagram.linkTemplate =  // for parent-child relationships
+        $(go.Link,
+          {
+            routing: go.Link.Orthogonal, curviness: 10,
+            layerName: "Background", selectable: false,
+            fromSpot: go.Spot.Bottom, toSpot: go.Spot.Top
+          },
+          $(go.Shape, { strokeWidth: 2 })
+        );
+
+      diagram.linkTemplateMap.add("Marriage",  // for marriage relationships
+        $(go.Link, { selectable: false },
+          $(go.Shape, { strokeWidth: 2, stroke: "darkgreen" })
+      ));
+
+
+      // n: name, s: sex, m: mother, f: father, ux: wife, vir: husband, a: attributesขข/markers
+    console.log(data);
+      setupDiagram(diagram, data,1 /* focus on this person */);
+    
+
+    }
+    
+    return diagram;
+    
+}
+
