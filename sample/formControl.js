@@ -1,4 +1,41 @@
 
+
+//------------------------css menu bar--------------------
+(function($){
+$(document).ready(function(){
+
+$('#cssmenu li.active').addClass('open').children('ul').show();
+	$('#cssmenu li.has-sub>a').on('click', function(){
+		$(this).removeAttr('href');
+		var element = $(this).parent('li');
+		if (element.hasClass('open')) {
+			element.removeClass('open');
+			element.find('li').removeClass('open');
+			element.find('ul').slideUp(200);
+		}
+		else {
+			element.addClass('open');
+			element.children('ul').slideDown(200);
+			element.siblings('li').children('ul').slideUp(200);
+			element.siblings('li').removeClass('open');
+			element.siblings('li').find('li').removeClass('open');
+			element.siblings('li').find('ul').slideUp(200);
+            
+            
+            
+		}
+	});
+
+});
+})(jQuery);
+
+
+//---------------end css menu bar--------------
+
+
+
+
+
 var clickCount=0;
   var JsonData=[
     {key:1,n: "Eve",s:"F",m:2,a:"BHS"},
@@ -107,8 +144,6 @@ function editNode(e,b){
       myDiagram.model.startTransaction("modified Node")
       myDiagram.model.setDataProperty(node, "n", newName);
       myDiagram.model.commitTransaction("modified Node");
- 
-    
-    
     
 }
+
