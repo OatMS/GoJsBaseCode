@@ -1,12 +1,23 @@
 
 var clickCount=0;
-  
+  var JsonData=[
+    {key:1,n: "Eve",s:"F",m:2,a:"BHS"},
+    {key:2,n:'Mom',s:'F',cou:3,a:"CGK"},
+    {key:3,n:"Dad",s:'M',a:"AELS"},
+    {key:4,n: "Ever",s:"F",m:2,f:3,a:"BH"},
+    {key:5,n: 'Ever',s:'M',cou:4} 
+];
 var Form,editForm,infoForm;
 var firstClick = true;
 
 function openFile(event){
     alert(event.target.files[0]);
-    var myDiagram = Genogram(event.target,"myDiagram");
+    var myDiagram = Genogram(JsonData,"myDiagram");
+}
+
+function createDi(usrdata){
+    var myDiagram = Genogram(usrdata,"myDiagram");
+   // alert('on create Di');
 }
 
 function setupForm(){
