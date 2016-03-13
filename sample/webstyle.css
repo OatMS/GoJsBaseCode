@@ -36,6 +36,7 @@
     margin: 30px auto;
     padding: 30px;
     background-color: white;
+    
 }
 
 label.image-radio input[type="radio"]:checked + img{
@@ -138,7 +139,7 @@ html, body {
   font-size: 16px;
   text-decoration: none;
   color: #ffffff;
-  background: #49505a;
+  background: #6a7dce;
   -webkit-transition: color .2s ease;
   -o-transition: color .2s ease;
   transition: color .2s ease;
@@ -239,6 +240,7 @@ border-bottom: solid whitesmoke 1px;
 #attrimg{
     height: 40px;
     margin: 6px;
+    
 }
 
 

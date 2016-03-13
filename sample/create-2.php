@@ -41,16 +41,36 @@
     <div id="header">
         <img src="img/logo.png" id="logo">
     </div>
+    
+    <div id="formCreate">
     <form action="editGenogram.php" method="get">
+      
+       <img src="img/mockup/familyinfo.PNG" style="margin:0 auto;">
+      
        <input hidden="hidden" name="name" value="<?= $_SESSION['name']?>">
        <input hidden="hidden" name="gender" value="<?= $_SESSION['gender']?>">
        <input hidden="hidden" name="attr" value="<?= $_SESSION['attr']?>">
+        <br>
+        <br>
+        <br>
+        <div style="clear:both;"></div>
+        <input type="submit" value="next">
+        <input src="img/mockup/next-button.PNG" type="image" alt="submit" style="float:right;" >
+            <a href="create-1.php"><img style="float:left;" src="img/mockup/back-button.PNG"></a>
         
-        <input type=submit value="หน้าถัดไป">
+        
+        
     </form>
+    
+    </div>
     <?
+ /*
         echo $_SESSION['name']."<br>".$_SESSION['gender']."<br>".$_SESSION['attr']."<br>";
+        */
+        
     ?>
+    
+    
 
 
 

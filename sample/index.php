@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
     <head>
         <title>enGeno</title>
@@ -22,7 +22,6 @@
        <div id="menuindex">
            <a href="create-1.php"> <img class="btmenu" src="img/menubt-create.png"> </a><br><br>
            <a href=""> <img class="btmenu"  src="img/menubt-txt.png"> </a><br><br>
-           <a href=""> <img class="btmenu"  src="img/menubt-gpro.png"> </a><br><br>
        </div>
         
     </body>

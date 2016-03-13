@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-  $altimg = array(
+  $altimgattr = array(
 "ติดการพนัน",
 "ติดสารเสพติด",
 "ติดแอลกอฮอล์",
@@ -24,9 +24,47 @@
 "โรคอ้วน.png",
 "โรคเบาหวาน",
 "โรคเอดส์ - HIV",
-"โรคไขข้อ"
+"โรคไขข้อ"     
 );
 
+
+
+$altimgline = array(
+    "ความสัมพันธ์ที่ดี",
+    "รักกัน",
+    "รักกันมาก",
+    "สนิทกัน",
+    "สนิทกันมาก",
+    "เข้าข้างกันมาก",
+    "ให้ความสนใจเป็นพิเศษ",
+    "ความหลงไหล",
+    "ความหลงไหลอย่างมาก",
+    "ไม่เป็นมิตรกัน",
+    "ไม่เป็นมิตรแต่ไม่ค่อยได้เจอ",
+    "ไม่เป็นมิตรกันแต่เจอกันบ่อย",
+    "ไม่เป็นมิตรกันและอยู่ด้วยกัน",
+    "การขัดแย้งกันจนถึงขั้นทำร้ายร่างกายหรือจิตใจ",
+    "ขัดแย้งแบบใช้ความรุนแรง-ไม่ค่อยได้เจอ",
+    "ขัดแย้งแบบใช้ความรุนแรง-ใช้ชีวิตอยู่ร่วมกัน",
+    "ใช้ความรุนแรงจนไม่เหลือความสัมพันธ์ที่ดี",
+    "ไม่ไว้ใจกัน",
+    "บาดหมาง",
+    "เกลียดกัน",
+    "เคยอยู่ห่างกัน",
+    "ต่างคนต่างอยู่",
+    "ไม่ค่อยมีปฏิสัมพันธ์กัน",
+    "ไม่แยแส",
+    "ถูกทอดทิ้ง",
+    "การอิจฉาริษยา",
+    "จ้องจับผิด",
+    "การโดนจัดการชีวิต",
+    "การโดนควบคุมชีวิต",
+    "โดนทำร้ายทางจิตใจ",
+    "โดนทำร้ายทางร่างกาย",
+    "โดนทำร้ายหรือล่วงละเมิด",
+    "โดนล่วงละเมิดหรือทารุณกรรมทางเพศ",
+    "ไม่ทราบความสัมพันธ์"
+);
     
 ?>
 <html>
@@ -62,7 +100,6 @@
    
     
     function setdata(){
-        
         var attr ="<? echo $_GET['attr'] ?>";
         attr = attr.split("");
         var userdata =[{n: "<? echo $_GET['name']; ?>",
@@ -94,20 +131,58 @@
         <div id="elementTools">
             <div id='cssmenu'>
                 <ul>
-                    <li><a href='#'>Genogram</a></li>
-                    <li class='active has-sub'><a href='#'>สัญลักษณ์ต่างๆ</a>
+                
+                <li class='active has-sub'><a href='#'>สัญลักษณ์สมาชิก</a>
                         <ul>
-                           <div >
+                           <div style="text-align:center" >
+     <?
+               $i=0;         
+        for($i=0;$i<4;$i++ ){
+       echo    "<a style='display:inline' title='".$altimgattr[$i]."' >";
+           echo "<img id='attrimg'   src='img/node/";
+        echo    $i+1;
+        echo    ".png' /> ";
+  
+         echo "  </a>";
+        }
+    
+    ?>
+                        </div>       
+                        </ul>
+                    </li>
+                 
+                    <li class='active has-sub'><a href='#'>สัญลักษณ์</a>
+                        <ul>
+                           <div style="text-align:center" >
      <?
                $i=0;         
         for($i=0;$i<24;$i++ ){
-      //  echo  "<li id='attrimg'>";
+       echo    "<a style='display:inline' title='".$altimgattr[$i]."' >";
            echo "<img id='attrimg'   src='img/attr/";
         echo    $i+1;
-        echo    ".png' ";
-  echo    "alt='".$altimg[$i]."' ";
-         echo "  />";
-     //   echo "</li>";
+        echo    ".png' /> ";
+  
+         echo "  </a>";
+        }
+    
+    ?>
+                        </div>       
+                        </ul>
+                    </li>
+                    
+                    <li class='has-sub'><a href='#'>เส้นความสัมพันธ์</a>
+                        <ul>
+                           <div style="text-align:center" >
+     <?
+               $i=0;         
+        for($i=0;$i<34;$i++ ){
+     
+            echo    "<a style='display:inline' title='".$altimgline[$i]."' >";
+           echo "<img id='attrimg'   src='img/line/";
+        echo    $i+1;
+        echo    ".png' /> ";
+  
+         echo "  </a>";
     }
     
     
@@ -115,8 +190,6 @@
                         </div>       
                         </ul>
                     </li>
-                    <li><a href='#'>About</a></li>
-                    <li><a href='#'>Contact</a></li>
                 </ul>
             </div>
         </div>
@@ -139,5 +212,3 @@
 
 </body>
 </html>
-
-

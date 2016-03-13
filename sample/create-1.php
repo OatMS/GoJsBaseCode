@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <?php
     ob_start();
     $_SESSION['name'] ="Oat";
@@ -32,7 +32,12 @@
 
     <form action="create-2.php" method="get">
         <div id="formCreate">
+           <img src="img/mockup/progress1.PNG" style="margin-left:120px;">
+           <img src="img/mockup/node.PNG" style="float: right; margin-right:100px;margin-top:50px; ">
+            <br>
             <h2>ข้อมูลส่วนตัวผู้ป่วย</h2>
+         <br>
+            <br>
             <h3 style="display:inline;">ชื่อ : </h3>
             <input type="text" name="name" style="width: 200px;">
 
@@ -81,7 +86,9 @@
                 <input id="L" type="checkbox" name="Attribute[]" value="L"> โรคติดต่อทางเพศสัมพันธ์
                 <br><br><br><br>
             </div>
-            <input type="submit" value="ถัดไป">
+            <input src="img/mockup/next-button.PNG" type="image" alt="submit" style="float:right;" >
+            <a href="index.php"><img style="float:left;" src="img/mockup/home-button.PNG"></a>
+        
         </div>
     </form>
 
