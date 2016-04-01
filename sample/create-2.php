@@ -45,7 +45,7 @@
     <div id="formCreate">
     <form action="editGenogram.php" method="get">
       
-       <img src="img/mockup/familyinfo.PNG" style="margin:0 auto;">
+       <img src="img/mockup/familyinfo.PNG" style="margin-left:130px;">
       
        <input hidden="hidden" name="name" value="<?= $_SESSION['name']?>">
        <input hidden="hidden" name="gender" value="<?= $_SESSION['gender']?>">
@@ -54,7 +54,6 @@
         <br>
         <br>
         <div style="clear:both;"></div>
-        <input type="submit" value="next">
         <input src="img/mockup/next-button.PNG" type="image" alt="submit" style="float:right;" >
             <a href="create-1.php"><img style="float:left;" src="img/mockup/back-button.PNG"></a>
         

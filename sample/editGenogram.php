@@ -116,7 +116,7 @@ $altimgline = array(
                         key:3,n:"Dad",s:"M",cou:2
                     }
                         ];
-    
+    setupForm();
         createDi(userdata);
     }
     
@@ -199,6 +199,72 @@ $altimgline = array(
         <div id="myDiagram">
 
         </div>
+        
+        <div id="infoNode" >
+    
+
+     
+     
+     
+     <!------- Info Form --------->
+      <div class="form" id="infoForm">
+         <!--
+        <h2 style="">ข้อมูลสมาชิกครอบครัว</h2>
+        
+        <form readonly="readonly" >
+         <h3>ชื่อ   </h3>
+         
+         <input readonly="readonly" type="text" id="nameNode">
+         
+         <h3>โรค</h3>
+         
+         
+        </form>
+    -->
+     </div>
+     
+         
+    <!-- ----- edit Form ------------------->
+     <div class="form" id="editForm">
+         
+        <h2 style="">ข้อมูลสมาชิกครอบครัว</h2>
+        <img src="img/mockup/node.PNG" style="margin-left:50px;">
+        
+        <form  >
+         <h3>ชื่อ   </h3>
+         
+         <input type="text" id="nameNode">
+         
+         <h3>โรค</h3>
+         
+         <div class="col-md-6">
+         <input id="A"  type="checkbox" name="Attribute" value="A" >ภาวะซึมเศร้า<br>
+        <input id="B" type="checkbox" name="Attribute" value="B"> ภาวะโรคอ้วน<br>
+        <input id="C" type="checkbox" name="Attribute" value="C"> มะเร็ง<br>
+        <input id="D" type="checkbox" name="Attribute" value="D"> โรคหัวใจ<br>
+        <input id="E" type="checkbox" name="Attribute" value="E"> โรคความดันสูง<br>
+        <input id="F" type="checkbox" name="Attribute" value="F"> HIV / เอดส์<br>
+        </div>
+        
+        <div class="col-md-6">
+        
+        <input id="G" type="checkbox" name="Attribute" value="G">โรคตับอักเสบ<br>
+        <input id="H" type="checkbox" name="Attribute" value="H"> โรคเบาหวาน<br>
+        <input id="I" type="checkbox" name="Attribute" value="I"> โรคไขข้อ<br>
+        <input id="J" type="checkbox" name="Attribute" value="J"> ออทิสติก<br>
+        <input id="K" type="checkbox" name="Attribute" value="K">อัลไซเมอร์<br>
+        <input id="L" type="checkbox" name="Attribute" value="L"> โรคติดต่อทางเพศสัมพันธ์<br>
+        </div>
+        
+        
+        </form>
+    
+     </div>
+      
+      
+  </div>
+  
+        
         
           
     

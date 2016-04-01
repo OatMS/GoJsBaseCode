@@ -49,17 +49,12 @@ var firstClick = true;
 
 function openFile(event){
     alert(event.target.files[0]);
-    var myDiagram = new         enGeno(JsonData,"myDiagram");
-    
+    var myDiagram = Genogram(JsonData,"myDiagram");
 }
 
 function createDi(usrdata){
+    var myDiagram = Genogram(usrdata,"myDiagram");
    // alert('on create Di');
-   
-    var myDiagram = new enGeno(usrdata,"myDiagram");
-    myDiagram.init();
-  //  myDiagram.addNode();
-    
 }
 
 function setupForm(){

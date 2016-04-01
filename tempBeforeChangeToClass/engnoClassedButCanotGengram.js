@@ -1,5 +1,146 @@
 var selectedNode = [];
+var enGeno;
 var $ = go.GraphObject.make;
+
+
+
+
+function setContextNode() {
+    var contextNode;
+    contextNode = $(go.Adornment, "Vertical", // that has one button
+        $("ContextMenuButton",
+            $(go.TextBlock, "add daughter"), {
+                click: addChild
+            }
+        ),
+        $("ContextMenuButton",
+            $(go.TextBlock, "add son"), {
+                click: addChild
+            }
+        ),
+        $("ContextMenuButton",
+            $(go.TextBlock, "add spouse"), {
+                click: addSpouse
+            }
+        ),
+        $("ContextMenuButton",
+            $(go.TextBlock, "Edit Node"), {
+                click: editNode
+            }
+        )
+
+        // more ContextMenuButtons would go here
+    );
+    return contextNode;
+}
+
+
+
+
+//ตรวจว่าเป็นผญไหม-หาเส้นโยงคู่-เจอเส้นที่โยงแต่งงาน-เจอคีย์ผู้ชาย-ได้เส้นออกมา-เอาเส้นมาเพิ่มโหนด
+function addChild(e, b) {
+    var buttontext = b.elt(1).text;
+    alert(buttontext);
+    // take a button panel in an Adornment, get its Adornment, and then get its adorned Node
+
+    var newnode = {
+        n: "newNode"
+    };
+    if (buttontext == "add son")
+        newnode = {
+            n: "newNode",
+            s: "M"
+        };
+    else if (buttontext == "add daughter")
+        newnode = {
+            n: "newNode",
+            s: "F"
+        };
+    var keyCou;
+    var node = b.part.adornedPart;
+    var isMarried;
+    node.findNodesOutOf().each(function (n) {
+        isMarried = findMarriage(myDiagram, n.data.key, node.data.key);
+        alert(isMarried.data.category);
+        keyCou = n.data.key;
+    });
+    if (isMarried == null) {
+        var keyInto = [];
+        node.findNodesInto().each(function (n) {
+            keyInto.push(n.data.key);
+        });
+        var keyCou = keyInto[0].split(',');
+        keyCou = keyCou[0];
+        isMarried = findMarriage(myDiagram, keyCou[0], node.data.key);
+        alert(isMarried.data.category + " with :" + keyCou);
+        //keyCou = n.data.key;
+    }
+    if (node.data.s == "F") {
+        if (isMarried.data.category == "Marriage") {
+            newnode["m"] = node.data.key;
+            newnode["f"] = keyCou;
+
+        }
+    }
+
+    // we are modifying the model, so conduct a transaction
+
+    myDiagram.startTransaction("add node and link");
+    // have the Model add the node data
+
+    myDiagram.model.addNodeData(newnode);
+    var mdata = isMarried.data;
+    var mlabkey = mdata.labelKeys[0];
+    var cdata = {
+        from: mlabkey,
+        to: newnode.key
+    };
+    // and then add a link data connecting the original node with the new one
+    // var newlink = { from: node.data.key, to: newnode.key };
+
+    myDiagram.model.addLinkData(cdata);
+    //   myDiagram.model.addLinkData(newlink);
+    // finish the transaction
+    myDiagram.commitTransaction("add node and link");
+}
+
+
+
+function addSpouse(e, b) {
+    var node = b.part.adornedPart;
+
+    var newnode = {
+        n: "Spouse",
+        cou: node.data.key
+    };
+    if (node.data.s == "M") {
+
+        newnode["s"] = "F";
+
+    } else if (node.data.s == "F") {
+
+        newnode["s"] = "M";
+
+    }
+
+    myDiagram.startTransaction("add Spouse");
+    // have the Model add the node data
+    myDiagram.model.addNodeData(newnode);
+    var mdata = node.data;
+    // and then add a link data connecting the original node with the new one
+    // var newlink = { from: node.data.key, to: newnode.key };
+
+
+    myDiagram.commitTransaction("add Spouse");
+    setupMarriages(myDiagram);
+    setupParents(myDiagram);
+    /*
+    var cdata = { from: node.data.key, to: newnode.data.key, labelKeys: [mlab.key], category: "Marriage",s: "LinkLabel" };
+    myDiagram.model.addLinkData(cdata);
+    myDiagram.commitTransaction("add Spouse and Marriage");
+    */
+}
+//oat edit
 
 
 //---------------Layout----------------------------
@@ -185,21 +326,75 @@ GenogramLayout.prototype.findParentsMarriageLabelNode = function (node) {
 
 //------------------------------------API----------------------
 
+enGeno = class {
 
-var enGeno = class {   
-
-
-    constructor(data, div) {
-        
+    constructor(agr, div) {
         var data;
-        var diagram;
-        var contextNode;
-        var selectedNode = [];
-        var nodeOnRightClicked;
-      //  this.setContextNode();
-      
+        var diagram
+        var GenogramLayout;
+       
+
+        
+        /*-------------------- readfile------------
+        if (agr.type == 'file') {
+            data = [];
+            var text;
+
+            var input = agr;
+            var reader = new FileReader();
+            reader.onload = function () {
+                var text = reader.result;
+                var lines = text.split("\r\n");
+
+                for (var line = 0; line < lines.length; line++) {
+
+                    data.push(readByLine(lines[line]));
+
+                }
+                console.log(JSON.stringify(data));
+                initGenogram(data, diagram);
+
+
+                function readByLine(line) {
+                    var attribute = line.split(',');
+                    var obj = {};
+                    for (var item = 0; item < attribute.length; item++) {
+                        var buddle = attribute[item].split(':');
+                        var key = buddle[0];
+                        var value = buddle[1]
+
+                        //if Attribute a
+                        if (key == 'a') {
+                            value = value.split('');
+                        }
+
+                        obj[key] = value;
+                    }
+                    return obj;
+
+                }
+
+            };
+            reader.readAsText(input.files[0]);
+
+
+
+        } else if (typeof data == 'object') {
+            alert('can detectec object');
+
+        } else {
+
+        }
+        
+        */
+        //data = JsonData;
+        data = agr;
+
+
+
+
         //if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
- console.log("1");
+
         this.diagram =
             $(go.Diagram, {
                 initialAutoScale: go.Diagram.Uniform,
@@ -225,22 +420,10 @@ var enGeno = class {
                     columnSpacing: 10
                 })
             });
-      /*  
-        //click Listener
-        this.diagram.addDiagramListener("ObjectSingleClicked",
-                function(e) {
-                    alert(e.diagram.selection.count);
-                    if (e.diagram.selection.count > 1) {
-                        e.cancel = true;
-                    showMessage("Cannot delete multiple selected parts");
-        }
-      });
-      
-      */
- console.log("2");
-        this.diagram.allowDrop = true;
 
-        this.diagram.div = document.getElementById("myDiagram");
+        diagram.allowDrop = true;
+
+        diagram.div = document.getElementById("myDiagram");
 
         // determine the color for each attribute shape
         function attrFill(a) {
@@ -382,8 +565,8 @@ var enGeno = class {
                             }),
                             $(go.Placeholder)
                         )
-                    )
-        //  ,contextMenu: this.setRightClickedNode // define a context menu for each node
+                    ),
+                    contextMenu: setContextNode() // define a context menu for each node
                 },
                 $(go.Panel, {
                         name: "ICON"
@@ -402,7 +585,7 @@ var enGeno = class {
                                         strokeWidth: 0
                                     },
                                     new go.Binding("fill", "", attrFill),
-                                    new go.Binding ("geometry", "", maleGeometry))
+                                    new go.Binding("geometry", "", maleGeometry))
                             ),
                             margin: 1
                         },
@@ -437,8 +620,8 @@ var enGeno = class {
                             }),
                             $(go.Placeholder)
                         )
-                    )
-            // ,rightCl: this.setRightClickedNode
+                    ),
+                    contextMenu: setContextNode()
                 },
 
                 $(go.Panel, {
@@ -508,31 +691,13 @@ var enGeno = class {
                 })
             ));
 
-      //  this.init();
-         console.log("can initial");
+        setupDiagram(this.diagram, data, 1);
 
     }
 
-    
-    
-    
-    
-   
-
-    
-    setupDiagram( focusId) {
-        
-        console.log("SetupDiagram");
-      //  var array = this.data;
-        var array=[
-    {key:1,n: "Eve",s:"F",m:2,a:"BHS"},
-    {key:2,n:'Mom',s:'F',cou:3,a:"CGK"},
-    {key:3,n:"Dad",s:'M',a:"AELS"},
-    {key:4,n: "Ever",s:"F",m:2,f:3,a:"BH"},
-    {key:5,n: 'Ever',s:'M',cou:4} 
-];
-        console.log(array[1].n);
-        this.diagram.model =
+    // create and initialize the Diagram.model given an array of node data representing people
+    setupDiagram(diagram, array, focusId) {
+        diagram.model =
             go.GraphObject.make(go.GraphLinksModel, { // declare support for link label nodes
                 linkLabelKeysProperty: "labelKeys",
                 // this property determines which template is used
@@ -540,13 +705,14 @@ var enGeno = class {
                 // create all of the nodes for people
                 nodeDataArray: array
             });
-       
+        setupMarriages(diagram);
+        setupParents(diagram);
 
 
 
-        var node = this.diagram.findNodeForKey(focusId);
+        var node = diagram.findNodeForKey(focusId);
         if (node !== null) {
-            this.diagram.select(node);
+            diagram.select(node);
             node.linksConnected.each(function (l) {
                 if (!l.isLabeledLink) return;
                 l.opacity = 0;
@@ -558,20 +724,14 @@ var enGeno = class {
 
             });
         }
-        
-        this.setupMarriages();
-        this.setupParents();
-        
     };
 
     // n: name, s: sex, m: mother, f: father, ux: wife, vir: husband, a: attributesขข/markers
 
 
-    findMarriage( a, b) { // A and B are node keys
-        console.log("findMarriage");
-        
-        var nodeA = this.diagram.findNodeForKey(a);
-        var nodeB = this.diagram.findNodeForKey(b);
+    findMarriage(diagram, a, b) { // A and B are node keys
+        var nodeA = diagram.findNodeForKey(a);
+        var nodeB = diagram.findNodeForKey(b);
         if (nodeA !== null && nodeB !== null) {
             var it = nodeA.findLinksBetween(nodeB); // in either direction
             while (it.next()) {
@@ -586,9 +746,8 @@ var enGeno = class {
 
 
     // now process the node data to determine marriages
-    setupMarriages() {
-        console.log("setupMarriages");
-        var model = this.diagram.model;
+    setupMarriages(diagram) {
+        var model = diagram.model;
         var nodeDataArray = model.nodeDataArray;
         for (var i = 0; i < nodeDataArray.length; i++) {
             var data = nodeDataArray[i];
@@ -602,7 +761,7 @@ var enGeno = class {
                         // or warn no reflexive marriages
                         continue;
                     }
-                    var link = this.findMarriage(key, wife);
+                    var link = findMarriage(diagram, key, wife);
                     if (link === null) {
                         // add a label node for the marriage link
                         var mlab = {
@@ -629,9 +788,8 @@ var enGeno = class {
     }
 
     // process parent-child relationships once all marriages are known
-    setupParents() {
-         console.log("setupParent");
-        var model = this.diagram.model;
+    setupParents(diagram) {
+        var model = diagram.model;
         var nodeDataArray = model.nodeDataArray;
         for (var i = 0; i < nodeDataArray.length; i++) {
             var data = nodeDataArray[i];
@@ -639,7 +797,7 @@ var enGeno = class {
             var mother = data.m;
             var father = data.f;
             if (mother !== undefined && father !== undefined) {
-                var link = this.findMarriage( mother, father);
+                var link = findMarriage(diagram, mother, father);
                 if (link === null) {
                     // or warn no known mother or no known father or no known marriage between them
                     if (window.console) window.console.log("unknown marriage: " + mother + " & " + father);
@@ -651,7 +809,7 @@ var enGeno = class {
                     from: mlabkey,
                     to: key
                 };
-                this.diagram.model.addLinkData(cdata);
+                diagram.model.addLinkData(cdata);
             }
             /*
             else if(mother !== undefined || father !== undefined){
@@ -676,18 +834,8 @@ var enGeno = class {
 
     };
     
-    
-    init(){
-      //  this.setContextNode();
-        console.log("in function init");
-        this.setupDiagram(1);
-        console.log("can set Diagram");
-        this.setupMarriages();
-        console.log("can set married");
-        this.setupParents();
-        console.log("can set Parent");
-       
-    }
+
+
 
 
 
@@ -695,61 +843,10 @@ var enGeno = class {
 
 
 
-//***********************
+//************************
 
-enGeno.prototype.editNodeData(node,data){
-    
-    
-
-    
-    this.diagram.model.startTransaction("modified Node")
-    for(var prop in data) {
-        var attr = obj.hasOwnProperty(prop)
-      if (attr) {
-          this.diagram.model.setDataProperty(node, attr, attr.data);
-          
-      }
-   }
-    this.diagram.model.setDataProperty(node, attrbute, value);
-    this.diagram.model.commitTransaction("modified Node");
-    
-    
-}
-
-//on righr click have a function
-enGeno.prototype.setContextNode = function () {
-    
-    this.contextNode = $(go.Adornment, "Vertical", // that has one button
-        $("ContextMenuButton",
-            $(go.TextBlock, "add daughter"), {
-                click: this.addChild
-            }
-        ),
-        $("ContextMenuButton",
-            $(go.TextBlock, "add son"), {
-                click: this.addChild
-            }
-        ),
-        $("ContextMenuButton",
-            $(go.TextBlock, "add spouse"), {
-                click: this.addSpouse
-            }
-        ),
-        $("ContextMenuButton",
-            $(go.TextBlock, "Edit Node"), {
-                click: this.editNode
-            }
-        )
-
-        // more ContextMenuButtons would go here
-    );
-  
-}
-
-
-enGeno.prototype.addNode = function(data) {
-    this.diagram.startTransaction('new node');
-   if(data == 'undefind'){
+function addNode(data) {
+    myDiagram.startTransaction('new node');
     var data = {
         key: 5,
         n: New,
@@ -757,122 +854,12 @@ enGeno.prototype.addNode = function(data) {
         m: 2,
         f: 3,
         a: [B, H]
-    };}
-    this.diagram.model.addNodeData(data);
-    part = this.diagram.findPartForData(data);
-    part.location =         this.diagram.toolManager.contextMenuTool.mouseDownPoint;
-    this.diagram.commitTransaction('new node');
-}
-
-
-//ตรวจว่าเป็นผญไหม-หาเส้นโยงคู่-เจอเส้นที่โยงแต่งงาน-เจอคีย์ผู้ชาย-ได้เส้นออกมา-เอาเส้นมาเพิ่มโหนด
-enGeno.prototype.addChild = function(e, b) {
-    var buttontext = b.elt(1).text;
-   // alert(buttontext);
-    // take a button panel in an Adornment, get its Adornment, and then get its adorned Node
-
-    var newnode = {
-        n: "newNode"
     };
-    if (buttontext == "add son")
-        newnode = {
-            n: "newNode",
-            s: "M"
-        };
-    else if (buttontext == "add daughter")
-        newnode = {
-            n: "newNode",
-            s: "F"
-        };
-    var keyCou;
-    var node = b.part.adornedPart;
-    var isMarried;
-    node.findNodesOutOf().each(function (n) {
-        isMarried = this.findMarriage( n.data.key, node.data.key);
-        alert(isMarried.data.category);
-        keyCou = n.data.key;
-    });
-    if (isMarried == null) {
-        var keyInto = [];
-        node.findNodesInto().each(function (n) {
-            keyInto.push(n.data.key);
-        });
-        var keyCou = keyInto[0].split(',');
-        keyCou = keyCou[0];
-        isMarried = this.findMarriage( keyCou[0], node.data.key);
-        alert(isMarried.data.category + " with :" + keyCou);
-        //keyCou = n.data.key;
-    }
-    if (node.data.s == "F") {
-        if (isMarried.data.category == "Marriage") {
-            newnode["m"] = node.data.key;
-            newnode["f"] = keyCou;
-
-        }
-    }
-
-    // we are modifying the model, so conduct a transaction
-
-    this.diagram.startTransaction("add node and link");
-    // have the Model add the node data
-
-    this.diagram.model.addNodeData(newnode);
-    var mdata = isMarried.data;
-    var mlabkey = mdata.labelKeys[0];
-    var cdata = {
-        from: mlabkey,
-        to: newnode.key
-    };
-    // and then add a link data connecting the original node with the new one
-    // var newlink = { from: node.data.key, to: newnode.key };
-
-    this.diagram.model.addLinkData(cdata);
-    //   myDiagram.model.addLinkData(newlink);
-    // finish the transaction
-    this.diagram.commitTransaction("add node and link");
+    myDiagram.model.addNodeData(data);
+    part = myDiagram.findPartForData(data);
+    part.location = myDiagram.toolManager.contextMenuTool.mouseDownPoint;
+    myDiagram.commitTransaction('new node');
 }
-
-
-
-enGeno.prototype.addSpouse = function(e, b) {
-    var node = b.part.adornedPart;
-
-    var newnode = {
-        n: "Spouse",
-        cou: node.data.key
-    };
-    if (node.data.s == "M") {
-
-        newnode["s"] = "F";
-
-    } else if (node.data.s == "F") {
-
-        newnode["s"] = "M";
-
-    }
-
-    myDiagram.startTransaction("add Spouse");
-    // have the Model add the node data
-    myDiagram.model.addNodeData(newnode);
-    var mdata = node.data;
-    // and then add a link data connecting the original node with the new one
-    // var newlink = { from: node.data.key, to: newnode.key };
-
-
-    myDiagram.commitTransaction("add Spouse");
-    setupMarriages(myDiagram);
-    setupParents(myDiagram);
-    /*
-    var cdata = { from: node.data.key, to: newnode.data.key, labelKeys: [mlab.key], category: "Marriage",s: "LinkLabel" };
-    myDiagram.model.addLinkData(cdata);
-    myDiagram.commitTransaction("add Spouse and Marriage");
-    */
-}
-
-
-
-
-
 
 
 

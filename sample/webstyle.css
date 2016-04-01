@@ -55,11 +55,13 @@ label.image-radio input[type="radio"]:checked + img{
 }
 
 #infoNode {
-   background-image: url(images/brown_notepaper_bg.JPG);
-    background-repeat: repeat;
-    width:34.5%;
-    height:517px;
+  
+    background-color: white;
+    width:27%;
+    height:650px;
     float:right;
+    border: solid 1px;
+    border-color: dimgrey;
 }
 
 
