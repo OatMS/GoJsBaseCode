@@ -1,4 +1,4 @@
-
+var myDiagram;
 
 //------------------------css menu bar--------------------
 (function($){
@@ -56,7 +56,7 @@ function openFile(event){
 function createDi(usrdata){
    // alert('on create Di');
    
-    var myDiagram = new enGeno(usrdata,"myDiagram");
+     myDiagram = new enGeno(usrdata,"myDiagram");
     myDiagram.init();
   //  myDiagram.addNode();
     
@@ -72,29 +72,12 @@ function setupForm(){
 
 
 function clickNode(ctrl,node){
-    var node = node.part.adornedPart;
-    /*
-    if(!firstClick){
-        Form.removeChild(editForm);
-    }
-    Form.appendChild(infoForm);
-    firstClick=false;
-    */
-    editNode(ctrl,node);
-     var nameText = document.getElementById("nameNode");
-   nameText.value = node.data.n;
     
+  var node = this.myDiagram.getSelectedNode();
     
-    
-    var link = node.findTreeParentLink() ;
-    if(link!== null){
-     
-    }
-  if (!ctrl) {
-    selectedNode =[];
-      
-  }
-    selectedNode.push(node);
+   
+             
+   console.log(node[0].data.key);
    
 }
 
@@ -105,31 +88,28 @@ function clickDiagram(){
 }
 
 
-function getSelectedNode(){
-    return selectedNode;
-}
-
 function resetClick(){
     selectedNode=[];
 }	
 
 function doubleClickNode(e,b){
-    var node = b.part.adornedPart;
-    prompt("Name : ",node.data.n);
+    var node = b;
+   var n = prompt("Name : ",node.data.n);
+    myDiagram.editNodeData(node,{"n":n,a:["A","B","C","D"]});
 }
 
 
 
 function editNode(e,b){
-    var node = b.part.adornedPart;
-    /*
+    //var node = b.part.adornedPart;
+ var node = b;
     if(!firstClick){
         Form.removeChild(infoForm);
     }
     
     Form.appendChild(editForm);
         
-*/
+
       e = window.event;
     
     

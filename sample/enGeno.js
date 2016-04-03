@@ -1,4 +1,4 @@
-var selectedNode = [];
+//var selectedNode = [];
 var $ = go.GraphObject.make;
 
 
@@ -186,20 +186,20 @@ GenogramLayout.prototype.findParentsMarriageLabelNode = function (node) {
 //------------------------------------API----------------------
 
 
-var enGeno = class {   
+var enGeno = class {
 
 
     constructor(data, div) {
-        
+
         var data;
         var diagram;
         var contextNode;
-        var selectedNode = [];
+        var selectedNodes = [];
         var nodeOnRightClicked;
-      //  this.setContextNode();
-      
+        //  this.setContextNode();
+
         //if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
- console.log("1");
+        console.log("1");
         this.diagram =
             $(go.Diagram, {
                 initialAutoScale: go.Diagram.Uniform,
@@ -225,19 +225,34 @@ var enGeno = class {
                     columnSpacing: 10
                 })
             });
-      /*  
+
         //click Listener
         this.diagram.addDiagramListener("ObjectSingleClicked",
-                function(e) {
-                    alert(e.diagram.selection.count);
-                    if (e.diagram.selection.count > 1) {
-                        e.cancel = true;
-                    showMessage("Cannot delete multiple selected parts");
-        }
-      });
-      
-      */
- console.log("2");
+            function (e) {
+            console.log("in this");
+            /*
+            console.log("name : "+e.diagram.selection.count);
+            
+            //return Array of Node
+             var part = e.diagram.selection.iterator;
+            //this.selectedNodes= part;
+            //do sth for every Node
+            while (part.next()) {
+                //print Node
+                var node = part.value;
+            console.log("Key: " + node.data.key +", Name : "+node.data.n);
+                
+            }
+            
+           // this.setSelectedNode(part);
+            e.diagram.selectedNodes = part;
+            console.log("Can Set");
+            */
+            
+            });
+
+
+       
         this.diagram.allowDrop = true;
 
         this.diagram.div = document.getElementById("myDiagram");
@@ -368,22 +383,24 @@ var enGeno = class {
                     locationSpot: go.Spot.Center,
                     locationObjectName: "ICON"
                 }, {
-                    doubleClick: doubleClickNode,
+                    doubleClick: function (e, node) {
+                        doubleClickNode(e, node);
+                    },
                     click: function (e, node) {
                         clickNode(window.event.ctrlKey, node)
                     },
                     selectionAdornmentTemplate: $(go.Adornment, "Spot",
-                        $(go.Panel, "Auto",
-                            // this Adornment has a rectangular blue Shape around the selected node
-                            $(go.Shape, {
-                                fill: null,
-                                stroke: "dodgerblue",
-                                strokeWidth: 3
-                            }),
-                            $(go.Placeholder)
+                            $(go.Panel, "Auto",
+                                // this Adornment has a rectangular blue Shape around the selected node
+                                $(go.Shape, {
+                                    fill: null,
+                                    stroke: "dodgerblue",
+                                    strokeWidth: 3
+                                }),
+                                $(go.Placeholder)
+                            )
                         )
-                    )
-        //  ,contextMenu: this.setRightClickedNode // define a context menu for each node
+                        //  ,contextMenu: this.setRightClickedNode // define a context menu for each node
                 },
                 $(go.Panel, {
                         name: "ICON"
@@ -402,7 +419,7 @@ var enGeno = class {
                                         strokeWidth: 0
                                     },
                                     new go.Binding("fill", "", attrFill),
-                                    new go.Binding ("geometry", "", maleGeometry))
+                                    new go.Binding("geometry", "", maleGeometry))
                             ),
                             margin: 1
                         },
@@ -428,17 +445,17 @@ var enGeno = class {
                         clickNode(window.event.ctrlKey, node)
                     },
                     selectionAdornmentTemplate: $(go.Adornment, "Spot",
-                        $(go.Panel, "Auto",
-                            // this Adornment has a rectangular blue Shape around the selected node
-                            $(go.Shape, {
-                                fill: null,
-                                stroke: "dodgerblue",
-                                strokeWidth: 3
-                            }),
-                            $(go.Placeholder)
+                            $(go.Panel, "Auto",
+                                // this Adornment has a rectangular blue Shape around the selected node
+                                $(go.Shape, {
+                                    fill: null,
+                                    stroke: "dodgerblue",
+                                    strokeWidth: 3
+                                }),
+                                $(go.Placeholder)
+                            )
                         )
-                    )
-            // ,rightCl: this.setRightClickedNode
+                        // ,rightCl: this.setRightClickedNode
                 },
 
                 $(go.Panel, {
@@ -508,28 +525,57 @@ var enGeno = class {
                 })
             ));
 
-      //  this.init();
-         console.log("can initial");
+        //  this.init();
+        console.log("can initial");
 
     }
 
-    
-    
-    
-    
-   
 
-    
-    setupDiagram( focusId) {
-        
+
+
+
+
+
+
+    setupDiagram(focusId) {
+
         console.log("SetupDiagram");
-      //  var array = this.data;
-        var array=[
-    {key:1,n: "Eve",s:"F",m:2,a:"BHS"},
-    {key:2,n:'Mom',s:'F',cou:3,a:"CGK"},
-    {key:3,n:"Dad",s:'M',a:"AELS"},
-    {key:4,n: "Ever",s:"F",m:2,f:3,a:"BH"},
-    {key:5,n: 'Ever',s:'M',cou:4} 
+        //  var array = this.data;
+        var array = [
+            {
+                key: 1,
+                n: "Eve",
+                s: "F",
+                m: 2,
+                a: "BHS"
+            },
+            {
+                key: 2,
+                n: 'Mom',
+                s: 'F',
+                cou: 3,
+                a: "CGK"
+            },
+            {
+                key: 3,
+                n: "Dad",
+                s: 'M',
+                a: "AELS"
+            },
+            {
+                key: 4,
+                n: "Ever",
+                s: "F",
+                m: 2,
+                f: 3,
+                a: "BH"
+            },
+            {
+                key: 5,
+                n: 'Ever',
+                s: 'M',
+                cou: 4
+            }
 ];
         console.log(array[1].n);
         this.diagram.model =
@@ -540,7 +586,7 @@ var enGeno = class {
                 // create all of the nodes for people
                 nodeDataArray: array
             });
-       
+
 
 
 
@@ -558,18 +604,18 @@ var enGeno = class {
 
             });
         }
-        
+
         this.setupMarriages();
         this.setupParents();
-        
+
     };
 
     // n: name, s: sex, m: mother, f: father, ux: wife, vir: husband, a: attributesขข/markers
 
 
-    findMarriage( a, b) { // A and B are node keys
+    findMarriage(a, b) { // A and B are node keys
         console.log("findMarriage");
-        
+
         var nodeA = this.diagram.findNodeForKey(a);
         var nodeB = this.diagram.findNodeForKey(b);
         if (nodeA !== null && nodeB !== null) {
@@ -630,7 +676,7 @@ var enGeno = class {
 
     // process parent-child relationships once all marriages are known
     setupParents() {
-         console.log("setupParent");
+        console.log("setupParent");
         var model = this.diagram.model;
         var nodeDataArray = model.nodeDataArray;
         for (var i = 0; i < nodeDataArray.length; i++) {
@@ -639,7 +685,7 @@ var enGeno = class {
             var mother = data.m;
             var father = data.f;
             if (mother !== undefined && father !== undefined) {
-                var link = this.findMarriage( mother, father);
+                var link = this.findMarriage(mother, father);
                 if (link === null) {
                     // or warn no known mother or no known father or no known marriage between them
                     if (window.console) window.console.log("unknown marriage: " + mother + " & " + father);
@@ -675,10 +721,10 @@ var enGeno = class {
 
 
     };
-    
-    
-    init(){
-      //  this.setContextNode();
+
+
+    init() {
+        //  this.setContextNode();
         console.log("in function init");
         this.setupDiagram(1);
         console.log("can set Diagram");
@@ -686,7 +732,7 @@ var enGeno = class {
         console.log("can set married");
         this.setupParents();
         console.log("can set Parent");
-       
+
     }
 
 
@@ -696,29 +742,42 @@ var enGeno = class {
 
 
 //***********************
+/*
+enGeno.prototype.setSelectedNode = function () {
+    var selnode = this.diagram.selection;
+    for (var node in selnode) {
+        if (node instanceof go.Node) {
+            this.selectedNode = [];
+            this.selectedNode.push(node);
+        }
+    }
+}
 
-enGeno.prototype.editNodeData(node,data){
-    
-    
+*/
 
-    
-    this.diagram.model.startTransaction("modified Node")
-    for(var prop in data) {
-        var attr = obj.hasOwnProperty(prop)
-      if (attr) {
-          this.diagram.model.setDataProperty(node, attr, attr.data);
-          
-      }
-   }
-    this.diagram.model.setDataProperty(node, attrbute, value);
+//Now can editNode
+enGeno.prototype.editNodeData = function (node, obj) {
+
+    //เปลี่ยน/เพิ่มเติม data ในโหนดที่ส่งเข้ามาเป็นพารามิเตอร์
+    this.diagram.model.startTransaction("modified Node");
+    node = this.diagram.model.findNodeDataForKey(node.data.key);
+    for (var prop in obj) {
+        if (obj.hasOwnProperty(prop)) {
+            //  console.log("keynode : "+node.data.key);
+            console.log(prop + " : " + obj[prop]);
+
+            this.diagram.model.setDataProperty(node, prop, obj[prop]);
+        }
+    }
+
+
     this.diagram.model.commitTransaction("modified Node");
-    
-    
+    console.log("edit");
 }
 
 //on righr click have a function
 enGeno.prototype.setContextNode = function () {
-    
+
     this.contextNode = $(go.Adornment, "Vertical", // that has one button
         $("ContextMenuButton",
             $(go.TextBlock, "add daughter"), {
@@ -743,32 +802,33 @@ enGeno.prototype.setContextNode = function () {
 
         // more ContextMenuButtons would go here
     );
-  
+
 }
 
 
-enGeno.prototype.addNode = function(data) {
+enGeno.prototype.addNode = function (data) {
     this.diagram.startTransaction('new node');
-   if(data == 'undefind'){
-    var data = {
-        key: 5,
-        n: New,
-        s: F,
-        m: 2,
-        f: 3,
-        a: [B, H]
-    };}
+    if (data == 'undefind') {
+        var data = {
+            key: 5,
+            n: New,
+            s: F,
+            m: 2,
+            f: 3,
+            a: [B, H]
+        };
+    }
     this.diagram.model.addNodeData(data);
     part = this.diagram.findPartForData(data);
-    part.location =         this.diagram.toolManager.contextMenuTool.mouseDownPoint;
+    part.location = this.diagram.toolManager.contextMenuTool.mouseDownPoint;
     this.diagram.commitTransaction('new node');
 }
 
 
 //ตรวจว่าเป็นผญไหม-หาเส้นโยงคู่-เจอเส้นที่โยงแต่งงาน-เจอคีย์ผู้ชาย-ได้เส้นออกมา-เอาเส้นมาเพิ่มโหนด
-enGeno.prototype.addChild = function(e, b) {
+enGeno.prototype.addChild = function (e, b) {
     var buttontext = b.elt(1).text;
-   // alert(buttontext);
+    // alert(buttontext);
     // take a button panel in an Adornment, get its Adornment, and then get its adorned Node
 
     var newnode = {
@@ -788,7 +848,7 @@ enGeno.prototype.addChild = function(e, b) {
     var node = b.part.adornedPart;
     var isMarried;
     node.findNodesOutOf().each(function (n) {
-        isMarried = this.findMarriage( n.data.key, node.data.key);
+        isMarried = this.findMarriage(n.data.key, node.data.key);
         alert(isMarried.data.category);
         keyCou = n.data.key;
     });
@@ -799,7 +859,7 @@ enGeno.prototype.addChild = function(e, b) {
         });
         var keyCou = keyInto[0].split(',');
         keyCou = keyCou[0];
-        isMarried = this.findMarriage( keyCou[0], node.data.key);
+        isMarried = this.findMarriage(keyCou[0], node.data.key);
         alert(isMarried.data.category + " with :" + keyCou);
         //keyCou = n.data.key;
     }
@@ -834,7 +894,7 @@ enGeno.prototype.addChild = function(e, b) {
 
 
 
-enGeno.prototype.addSpouse = function(e, b) {
+enGeno.prototype.addSpouse = function (e, b) {
     var node = b.part.adornedPart;
 
     var newnode = {
@@ -869,9 +929,27 @@ enGeno.prototype.addSpouse = function(e, b) {
     */
 }
 
+enGeno.prototype.getSelectedNode = function () {
 
+    console.log("number : " + this.diagram.selection.count);
 
+    //return Array of Node
+    var part = this.diagram.selection.iterator;
+    //this.selectedNodes= part;
+    //do sth for every Node
+    var arrNode =[];
+    while (part.next()) {
+        //print Node
+        var node = part.value;
+        console.log("Key: " + node.data.key + ", Name : " + node.data.n);
+        arrNode.push(node);
+       // this.selectedNodes.push(node);
 
+    }
+
+    //this.diagram.selection.iterator.value;
+    return arrNode;
+}
 
 
 
