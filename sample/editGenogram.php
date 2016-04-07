@@ -275,6 +275,21 @@ $altimgline = array(
 
 
     </div>
+    
+    
+    
+    <menu id="ctxMenu">
+    <menu title="File">
+        <menu onclick="addSon" title="addSon"></menu>
+        <menu title="Save As"></menu>
+        <menu title="Open"></menu>
+    </menu>
+    <menu title="Edit">
+        <menu title="Cut"></menu>
+        <menu title="Copy"></menu>
+        <menu title="Paste"></menu>
+    </menu>
+</menu>
 
 </body>
 </html>

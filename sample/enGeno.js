@@ -194,7 +194,6 @@ var enGeno = class {
         var data;
         var diagram;
         var contextNode;
-        var selectedNodes = [];
         var nodeOnRightClicked;
         //  this.setContextNode();
 
@@ -226,33 +225,14 @@ var enGeno = class {
                 })
             });
 
-        //click Listener
+        //click Listener **candelete**
         this.diagram.addDiagramListener("ObjectSingleClicked",
             function (e) {
-            console.log("in this");
-            /*
-            console.log("name : "+e.diagram.selection.count);
-            
-            //return Array of Node
-             var part = e.diagram.selection.iterator;
-            //this.selectedNodes= part;
-            //do sth for every Node
-            while (part.next()) {
-                //print Node
-                var node = part.value;
-            console.log("Key: " + node.data.key +", Name : "+node.data.n);
-                
-            }
-            
-           // this.setSelectedNode(part);
-            e.diagram.selectedNodes = part;
-            console.log("Can Set");
-            */
-            
+
             });
 
 
-       
+
         this.diagram.allowDrop = true;
 
         this.diagram.div = document.getElementById("myDiagram");
@@ -260,34 +240,34 @@ var enGeno = class {
         // determine the color for each attribute shape
         function attrFill(a) {
             switch (a) {
-                case "A":
-                    return "#0000FE";
-                case "B":
-                    return "#FF00FF";
-                case "C":
-                    return "#FE0000";
-                case "D":
-                    return "#C00000";
-                case "E":
-                    return "#C00000";
-                case "F":
-                    return "#FFC000";
-                case "G":
-                    return "#01FF00";
-                case "H":
-                    return "#800080";
-                case "I":
-                    return "#939FBB";
-                case "J":
-                    return "#01FFFF";
-                case "K":
-                    return "#359AFF";
-                case "L":
-                    return "#FFFF00";
-                case "S":
-                    return "red";
-                default:
-                    return "transparent";
+            case "A":
+                return "#0000FE";
+            case "B":
+                return "#FF00FF";
+            case "C":
+                return "#FE0000";
+            case "D":
+                return "#C00000";
+            case "E":
+                return "#C00000";
+            case "F":
+                return "#FFC000";
+            case "G":
+                return "#01FF00";
+            case "H":
+                return "#800080";
+            case "I":
+                return "#939FBB";
+            case "J":
+                return "#01FFFF";
+            case "K":
+                return "#359AFF";
+            case "L":
+                return "#FFFF00";
+            case "S":
+                return "red";
+            default:
+                return "transparent";
             }
         }
 
@@ -301,34 +281,34 @@ var enGeno = class {
 
         function maleGeometry(a) {
             switch (a) {
-                case "A":
-                    return tlsq;
-                case "B":
-                    return tlsq;
-                case "C":
-                    return tlsq;
-                case "D":
-                    return trsq;
-                case "E":
-                    return trsq;
-                case "F":
-                    return trsq;
-                case "G":
-                    return brsq;
-                case "H":
-                    return brsq;
-                case "I":
-                    return brsq;
-                case "J":
-                    return blsq;
-                case "K":
-                    return blsq;
-                case "L":
-                    return blsq;
-                case "S":
-                    return slash;
-                default:
-                    return tlsq;
+            case "A":
+                return tlsq;
+            case "B":
+                return tlsq;
+            case "C":
+                return tlsq;
+            case "D":
+                return trsq;
+            case "E":
+                return trsq;
+            case "F":
+                return trsq;
+            case "G":
+                return brsq;
+            case "H":
+                return brsq;
+            case "I":
+                return brsq;
+            case "J":
+                return blsq;
+            case "K":
+                return blsq;
+            case "L":
+                return blsq;
+            case "S":
+                return slash;
+            default:
+                return tlsq;
             }
         }
 
@@ -341,34 +321,34 @@ var enGeno = class {
 
         function femaleGeometry(a) {
             switch (a) {
-                case "A":
-                    return tlarc;
-                case "B":
-                    return tlarc;
-                case "C":
-                    return tlarc;
-                case "D":
-                    return trarc;
-                case "E":
-                    return trarc;
-                case "F":
-                    return trarc;
-                case "G":
-                    return brarc;
-                case "H":
-                    return brarc;
-                case "I":
-                    return brarc;
-                case "J":
-                    return blarc;
-                case "K":
-                    return blarc;
-                case "L":
-                    return blarc;
-                case "S":
-                    return slash;
-                default:
-                    return tlarc;
+            case "A":
+                return tlarc;
+            case "B":
+                return tlarc;
+            case "C":
+                return tlarc;
+            case "D":
+                return trarc;
+            case "E":
+                return trarc;
+            case "F":
+                return trarc;
+            case "G":
+                return brarc;
+            case "H":
+                return brarc;
+            case "I":
+                return brarc;
+            case "J":
+                return blarc;
+            case "K":
+                return blarc;
+            case "L":
+                return blarc;
+            case "S":
+                return slash;
+            default:
+                return tlarc;
             }
         }
 
@@ -826,32 +806,42 @@ enGeno.prototype.addNode = function (data) {
 
 
 //ตรวจว่าเป็นผญไหม-หาเส้นโยงคู่-เจอเส้นที่โยงแต่งงาน-เจอคีย์ผู้ชาย-ได้เส้นออกมา-เอาเส้นมาเพิ่มโหนด
-enGeno.prototype.addChild = function (e, b) {
-    var buttontext = b.elt(1).text;
-    // alert(buttontext);
+enGeno.prototype.addChild = function (node, gender) {
+  
     // take a button panel in an Adornment, get its Adornment, and then get its adorned Node
 
     var newnode = {
         n: "newNode"
     };
-    if (buttontext == "add son")
+    if (gender == "M"||gender == "m")
         newnode = {
             n: "newNode",
             s: "M"
         };
-    else if (buttontext == "add daughter")
+    else if (gender == "F"||gender == "f")
         newnode = {
             n: "newNode",
             s: "F"
         };
     var keyCou;
-    var node = b.part.adornedPart;
+ //   var node = b.part.adornedPart;
     var isMarried;
+    node = this.diagram.findNodeForKey(node.data.key);
+    var arrNode = [];
     node.findNodesOutOf().each(function (n) {
-        isMarried = this.findMarriage(n.data.key, node.data.key);
-        alert(isMarried.data.category);
-        keyCou = n.data.key;
+        arrNode.push(n.data.key);
+        alert(n.data.key);
+   //    n isMarried =  findMarriage(n.data.key, node.data.key);
+      //  alert(isMarried.data.category);
+    //    keyCou = n.data.key;
     });
+  
+    for(var n =0;n<arrNode.length;n++){
+          alert(arrNode[n]);
+        isMarried =  this.findMarriage(arrNode[n], node.data.key);
+        alert(isMarried.data.category);
+        keyCou = n;
+    }
     if (isMarried == null) {
         var keyInto = [];
         node.findNodesInto().each(function (n) {
@@ -892,7 +882,13 @@ enGeno.prototype.addChild = function (e, b) {
     this.diagram.commitTransaction("add node and link");
 }
 
+enGeno.prototype.addSon = function (node){
+    this.addChild(node,"M");
+}
 
+enGeno.prototype.addDaughter = function (node){
+    this.addChild(node,"F");
+}
 
 enGeno.prototype.addSpouse = function (e, b) {
     var node = b.part.adornedPart;
@@ -937,13 +933,13 @@ enGeno.prototype.getSelectedNode = function () {
     var part = this.diagram.selection.iterator;
     //this.selectedNodes= part;
     //do sth for every Node
-    var arrNode =[];
+    var arrNode = [];
     while (part.next()) {
         //print Node
         var node = part.value;
         console.log("Key: " + node.data.key + ", Name : " + node.data.n);
         arrNode.push(node);
-       // this.selectedNodes.push(node);
+        // this.selectedNodes.push(node);
 
     }
 
@@ -1006,18 +1002,3 @@ function openFile(event) {
   };
 */
 //*************************
-
-function changeData() {
-    var newData = [
-        {
-            key: 1,
-            n: "Hello"
-        },
-        {
-            key: 2,
-            n: "World"
-        }];
-    init(newData);
-    setupDiagram(myDiagram, newData, 1 /* focus on this person */ );
-
-}

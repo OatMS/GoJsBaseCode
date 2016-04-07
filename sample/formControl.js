@@ -74,9 +74,7 @@ function setupForm(){
 function clickNode(ctrl,node){
     
   var node = this.myDiagram.getSelectedNode();
-    
-   
-             
+                 
    console.log(node[0].data.key);
    
 }
@@ -96,6 +94,7 @@ function doubleClickNode(e,b){
     var node = b;
    var n = prompt("Name : ",node.data.n);
     myDiagram.editNodeData(node,{"n":n,a:["A","B","C","D"]});
+     this.myDiagram.addDaughter(node);
 }
 
 
@@ -137,3 +136,22 @@ function editNode(e,b){
     
 }
 
+
+
+//-------------------Context----------------------------
+
+
+var notepad = document;
+notepad.addEventListener("contextmenu",function(event){
+    event.preventDefault();
+    var ctxMenu = document.getElementById("ctxMenu");
+    ctxMenu.style.display = "block";
+    ctxMenu.style.left = (event.pageX - 10)+"px";
+    ctxMenu.style.top = (event.pageY - 10)+"px";
+},false);
+notepad.addEventListener("click",function(event){
+    var ctxMenu = document.getElementById("ctxMenu");
+    ctxMenu.style.display = "";
+    ctxMenu.style.left = "";
+    ctxMenu.style.top = "";
+},false);
