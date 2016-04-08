@@ -94,7 +94,18 @@ function doubleClickNode(e,b){
     var node = b;
    var n = prompt("Name : ",node.data.n);
     myDiagram.editNodeData(node,{"n":n,a:["A","B","C","D"]});
-     this.myDiagram.addDaughter(node);
+    
+    //test addChile and data
+ //   var data = {key:10,n:"Hello",a:"ACFH"}
+  //   this.myDiagram.addDaughter(node,data);
+    
+    //test find and add Node
+  //  var nodeFound = myDiagram.findNode(3);
+  //  myDiagram.addSon(node,nodeFound);
+    
+    //test deleteNode
+    var nodeFound = myDiagram.findNode(5);
+    myDiagram.removeNode(nodeFound);
 }
 
 
