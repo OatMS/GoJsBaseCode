@@ -189,7 +189,7 @@ GenogramLayout.prototype.findParentsMarriageLabelNode = function (node) {
 var enGeno = class {
 
 
-    constructor(data, div) {
+    constructor(data, div) { 
 
         var data;
         var diagram;
@@ -198,7 +198,7 @@ var enGeno = class {
         //  this.setContextNode();
 
         //if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
-        console.log("1");
+       /*
         this.diagram =
             $(go.Diagram, {
                 initialAutoScale: go.Diagram.Uniform,
@@ -206,9 +206,7 @@ var enGeno = class {
                 // when a node is selected, draw a big yellow circle behind it
                 nodeSelectionAdornmentTemplate:
 
-                    $(go.Adornment, "Auto", {
-                        layerName: "Grid"
-                    }, // the predefined layer that is behind everything else
+                    $( go.Adornment, "Auto",  // the predefined layer that is behind everything else
                     $(go.Shape, "Circle", {
                         fill: "yellow",
                         stroke: null
@@ -224,6 +222,24 @@ var enGeno = class {
                     columnSpacing: 10
                 })
             });
+        */
+        
+        this.diagram =
+        $(go.Diagram,
+          {
+            initialAutoScale: go.Diagram.Uniform,
+            initialContentAlignment: go.Spot.Center,
+            "undoManager.isEnabled": true,
+            // when a node is selected, draw a big yellow circle behind it
+            nodeSelectionAdornmentTemplate:
+              $(go.Adornment, "Auto",
+                { layerName: "Grid" },  // the predefined layer that is behind everything else
+                $(go.Shape, "Circle", { fill: "yellow", stroke: null }),
+                $(go.Placeholder)
+              ),
+            layout:  // use a custom layout, defined below
+              $(GenogramLayout, { direction: 90, layerSpacing: 30, columnSpacing: 10 })
+          });
 
         //click Listener **candelete**
         this.diagram.addDiagramListener("ObjectSingleClicked",
@@ -368,18 +384,7 @@ var enGeno = class {
                     },
                     click: function (e, node) {
                         clickNode(window.event.ctrlKey, node)
-                    },
-                    selectionAdornmentTemplate: $(go.Adornment, "Spot",
-                            $(go.Panel, "Auto",
-                                // this Adornment has a rectangular blue Shape around the selected node
-                                $(go.Shape, {
-                                    fill: null,
-                                    stroke: "dodgerblue",
-                                    strokeWidth: 3
-                                }),
-                                $(go.Placeholder)
-                            )
-                        )
+                    }
                         //  ,contextMenu: this.setRightClickedNode // define a context menu for each node
                 },
                 $(go.Panel, {
@@ -423,18 +428,7 @@ var enGeno = class {
                     doubleClick: doubleClickNode,
                     click: function (e, node) {
                         clickNode(window.event.ctrlKey, node)
-                    },
-                    selectionAdornmentTemplate: $(go.Adornment, "Spot",
-                            $(go.Panel, "Auto",
-                                // this Adornment has a rectangular blue Shape around the selected node
-                                $(go.Shape, {
-                                    fill: null,
-                                    stroke: "dodgerblue",
-                                    strokeWidth: 3
-                                }),
-                                $(go.Placeholder)
-                            )
-                        )
+                    }
                         // ,rightCl: this.setRightClickedNode
                 },
 
@@ -509,10 +503,6 @@ var enGeno = class {
         console.log("can initial");
 
     }
-
-
-
-
 
 
 
@@ -756,14 +746,14 @@ enGeno.prototype.editNodeData = function (node, obj) {
 }
 
 
-/*
-enGeno.prototype.changeNodeData =function(node.obj){
+
+enGeno.prototype.changeNodeData =function(node,obj){
      this.diagram.model.startTransaction("modified Node");
-    node = this.diagram.model.findNodeDataForKey(node.data.key);
-    
+    node = this.diagram.model.findNodeDataForKey(node["key"]);
+    node.data = obj;
      this.diagram.model.commitTransaction("modified Node");
 }
-*/
+
 //on righr click have a function
 enGeno.prototype.setContextNode = function () {
 
