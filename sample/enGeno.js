@@ -252,10 +252,13 @@ var enGeno = class {
         this.diagram.allowDrop = true;
 
         this.diagram.div = document.getElementById("myDiagram");
+        
+      
+    
 
         // determine the color for each attribute shape
         function attrFill(a) {
-            switch (a) {
+            switch (a.attr) {
                 case "A":
                     return "#0000FE";
                 case "B":
@@ -295,37 +298,20 @@ var enGeno = class {
         var blsq = go.Geometry.parse("F M1 20 l19 0 0 19 -19 0z");
         var slash = go.Geometry.parse("F M38 0 L40 0 40 2 2 40 0 40 0 38z");
 
-        function maleGeometry(a) {
-            switch (a) {
-                case "A":
-                    return tlsq;
-                case "B":
-                    return tlsq;
-                case "C":
-                    return tlsq;
-                case "D":
-                    return trsq;
-                case "E":
-                    return trsq;
-                case "F":
-                    return trsq;
-                case "G":
-                    return brsq;
-                case "H":
-                    return brsq;
-                case "I":
-                    return brsq;
-                case "J":
-                    return blsq;
-                case "K":
-                    return blsq;
-                case "L":
-                    return blsq;
-                case "S":
-                    return slash;
-                default:
-                    return tlsq;
-            }
+      
+        
+        function maleGeometry(a){
+         //   console.log("attr : "+a[attr]+" ,index : "+a.index);
+            if(a.attr == 'S') return slash;
+            if(a.index ==1)return tlsq;
+            else if(a.index == 2 ) return trsq;
+            else if(a.index == 3 ) return brsq;
+            else if(a.index == 4 ) return blsq;
+            
+            
+            
+            console.log(JSON.stringify(a));
+
         }
 
         // determine the geometry for each attribute shape in a female;
@@ -335,40 +321,23 @@ var enGeno = class {
         var brarc = go.Geometry.parse("F M20 20 B 0 90 20 20 19 19 z");
         var blarc = go.Geometry.parse("F M20 20 B 90 90 20 20 19 19 z");
 
-        function femaleGeometry(a) {
-            switch (a) {
-                case "A":
-                    return tlarc;
-                case "B":
-                    return tlarc;
-                case "C":
-                    return tlarc;
-                case "D":
-                    return trarc;
-                case "E":
-                    return trarc;
-                case "F":
-                    return trarc;
-                case "G":
-                    return brarc;
-                case "H":
-                    return brarc;
-                case "I":
-                    return brarc;
-                case "J":
-                    return blarc;
-                case "K":
-                    return blarc;
-                case "L":
-                    return blarc;
-                case "S":
-                    return slash;
-                default:
-                    return tlarc;
-            }
+       
+
+        
+        
+        function femaleGeometry(a){
+         //   console.log("attr : "+a[attr]+" ,index : "+a.index);
+            if(a.attr == 'S') return slash;
+            if(a.index ==1)return tlarc;
+            else if(a.index == 2 ) return trarc;
+            else if(a.index == 3 ) return brarc;
+            else if(a.index == 4 ) return blarc;
+            
+            
+            
+            console.log(JSON.stringify(a));
+
         }
-
-
 
 
 
@@ -383,7 +352,7 @@ var enGeno = class {
                         doubleClickNode(e, node);
                     },
                     click: function (e, node) {
-                        clickNode(window.event.ctrlKey, node)
+                        clickNode(e, node)
                     }
                         //  ,contextMenu: this.setRightClickedNode // define a context menu for each node
                 },
@@ -427,7 +396,7 @@ var enGeno = class {
                 }, {
                     doubleClick: doubleClickNode,
                     click: function (e, node) {
-                        clickNode(window.event.ctrlKey, node)
+                        clickNode(e, node)
                     }
                         // ,rightCl: this.setRightClickedNode
                 },
@@ -547,6 +516,48 @@ var enGeno = class {
                 cou: 4
             }
 ];
+        
+        //  var newdata = [];
+       //var newdata = this.data;
+     //  var newdata = array;
+        /*
+        for (var i=0; i<array.length; i++) {
+            if(array[i].a != null){
+            for (var j=0; j<array[i].a.length; j++) {
+                 console.log("attr : "+array[i].a[j]+" ,index : "+j);
+                array[i].a[j] = { attr:array[i].a[j] , index:j };
+               
+            }
+                
+               
+            }
+          
+    }
+    */
+        
+        var newdata = array;
+        for(var i =0; i<newdata.length;i++){
+            if(newdata[i].a != null){
+                var str = newdata[i].a;
+                newdata[i].a = [];
+                for(var j = 0; j< str.length ;j++){
+                    if(str[j] =='S'){
+                        array[i].a.push({ attr:str[j] , index:17 });
+                    }
+                    else{
+                        console.log("attr : "+array[i].a[j]+" ,index : "+j);    
+                    array[i].a.push({ attr:str[j] , index:j+1 });
+                    }
+                    
+
+                }
+            }
+        }
+            //this.data = newdata;
+        console.log("data = "+JSON.stringify(array));
+        
+        
+        
         console.log(array[1].n);
         this.diagram.model =
             go.GraphObject.make(go.GraphLinksModel, { // declare support for link label nodes
@@ -580,11 +591,10 @@ var enGeno = class {
 
     };
 
-    // n: name, s: sex, m: mother, f: father, ux: wife, vir: husband, a: attributesขข/markers
 
 
     findMarriage(a, b) { // A and B are node keys
-        console.log("findMarriage");
+       // console.log("findMarriage");
 
         var nodeA = this.diagram.findNodeForKey(a);
         var nodeB = this.diagram.findNodeForKey(b);
@@ -603,7 +613,7 @@ var enGeno = class {
 
     // now process the node data to determine marriages
     setupMarriages() {
-        console.log("setupMarriages");
+       // console.log("setupMarriages");
         var model = this.diagram.model;
         var nodeDataArray = model.nodeDataArray;
         for (var i = 0; i < nodeDataArray.length; i++) {
@@ -645,8 +655,10 @@ var enGeno = class {
     }
 
     // process parent-child relationships once all marriages are known
+   
+    
     setupParents() {
-        console.log("setupParent");
+       // console.log("setupParent");
         var model = this.diagram.model;
         var nodeDataArray = model.nodeDataArray;
         for (var i = 0; i < nodeDataArray.length; i++) {
@@ -693,15 +705,16 @@ var enGeno = class {
     };
 
 
+
     init() {
         //  this.setContextNode();
-        console.log("in function init");
+      //  console.log("in function init");
         this.setupDiagram(1);
-        console.log("can set Diagram");
+      //  console.log("can set Diagram");
         this.setupMarriages();
-        console.log("can set married");
+      //  console.log("can set married");
         this.setupParents();
-        console.log("can set Parent");
+      //  console.log("can set Parent");
 
     }
 
@@ -734,8 +747,12 @@ enGeno.prototype.editNodeData = function (node, obj) {
     for (var prop in obj) {
         if (obj.hasOwnProperty(prop)) {
             //  console.log("keynode : "+node.data.key);
+            
             console.log(prop + " : " + obj[prop]);
-
+            if(prop =="a"){
+                obj[a] = reRankAttr(obj[a]);
+            }
+                
             this.diagram.model.setDataProperty(node, prop, obj[prop]);
         }
     }
@@ -750,7 +767,7 @@ enGeno.prototype.editNodeData = function (node, obj) {
 enGeno.prototype.changeNodeData =function(node,obj){
      this.diagram.model.startTransaction("modified Node");
     node = this.diagram.model.findNodeDataForKey(node["key"]);
-    node.data = obj;
+    
      this.diagram.model.commitTransaction("modified Node");
 }
 
@@ -790,7 +807,7 @@ enGeno.prototype.addNode = function (data) {
     if (data == 'undefind') {
         var data = {
             key: 5,
-            n: New,
+            n: "NewNode",
             s: F,
             m: 2,
             f: 3,
@@ -902,36 +919,30 @@ enGeno.prototype.addDaughter = function (node, data) {
 
 enGeno.prototype.addSpouse = function (node, data) {
     // var node = b.part.adornedPart;
-
+    var data = data;
+    this.diagram.startTransaction("add Spouse");
+   
     var newnode = {
         n: "Spouse",
-        cou: node.data.key
+        cou: node.key
     };
-    if (node.data.s == "M") {
+    if (node.data.s == "M" || node.s == "m" ) {
 
-        newnode["s"] = "F";
+        newnode.s = "F";
 
-    } else if (node.data.s == "F") {
+    } else if (node.data.s == "F" || node.s == "f" ) {
 
-        newnode["s"] = "M";
+        newnode.s = "M";
 
     }
-    if (data != 'undefine') {
+    if (data != null) {
         newnode = data;
     }
-
-
-    this.diagram.startTransaction("add Spouse");
-    // have the Model add the node data
     this.diagram.model.addNodeData(newnode);
-    var mdata = node.data;
-    // and then add a link data connecting the original node with the new one
-    // var newlink = { from: node.data.key, to: newnode.key };
-
-
     this.diagram.commitTransaction("add Spouse");
     this.setupMarriages();
     this.setupParents();
+    
     /*
     var cdata = { from: node.data.key, to: newnode.data.key, labelKeys: [mlab.key], category: "Marriage",s: "LinkLabel" };
     myDiagram.model.addLinkData(cdata);
@@ -985,6 +996,33 @@ enGeno.prototype.removeNode = function(node){
     this.diagram.remove(nodeRemove);
     this.diagram.commitTransaction("deleteNode");
 }
+
+enGeno.prototype.reRankAttr = function(a){
+    
+                for(var j = 0; j< a.length ;j++){
+                    if(a[j] =='S'){
+                        node.a.push({ attr:str[j] , index:17 });
+                    }
+                    else{
+                        a[j].index = j+1;
+                    }
+                }
+            
+    return a;
+}
+
+//*****************************************
+
+
+
+
+
+
+
+
+
+
+
 
 //******************************
 /*

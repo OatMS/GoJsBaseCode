@@ -101,9 +101,10 @@ function setupForm() {
 
 function clickNode(ctrl, node) {
 
-    var node = this.myDiagram.getSelectedNode();
-
-    console.log(node[0].data.key);
+  //  var node = this.myDiagram.getSelectedNode();
+   // console.log(node[0].data.key);
+    
+    this.myDiagram.addSpouse(node);
 
 }
 
@@ -120,11 +121,8 @@ function resetClick() {
 
 function doubleClickNode(e, b) {
     var node = b;
-    var n = prompt("Name : ", node.data.n);
-    myDiagram.editNodeData(node, {
-        "n": n,
-        a: ["A", "B", "C", "D"]
-    });
+   // var n = prompt("Name : ", node.data.n);
+ //  myDiagram.editNodeData(node, {"n": n,a: ["A", "B", "C", "D"] });
 
     //test addChile and data
     //   var data = {key:10,n:"Hello",a:"ACFH"}
@@ -139,9 +137,10 @@ function doubleClickNode(e, b) {
     //myDiagram.removeNode(nodeFound);
 
     //test changNode
+    /*
     var nodeFound = myDiagram.findNode(1);
     if (nodeFound != 'undefine') {
-        myDiagram.changeNodeData(nodeFound, {
+    myDiagram.changeNodeData(nodeFound, {
             key: 8,
             n: "HELLO",
             s: "F"
@@ -150,6 +149,9 @@ function doubleClickNode(e, b) {
     else {
          console.log("cannot find node");   
     }
+    */
+    this.myDiagram.addSon(node);
+    
 
 }
 
