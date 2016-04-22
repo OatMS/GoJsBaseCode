@@ -104,7 +104,10 @@ function clickNode(ctrl, node) {
   //  var node = this.myDiagram.getSelectedNode();
    // console.log(node[0].data.key);
     
-    this.myDiagram.addSpouse(node);
+    
+    this.myDiagram.filter("AK");
+    //still fail
+    //this.myDiagram.addSpouse(node);
 
 }
 
@@ -139,7 +142,8 @@ function doubleClickNode(e, b) {
     //test changNode
     /*
     var nodeFound = myDiagram.findNode(1);
-    if (nodeFound != 'undefine') {
+    if (nodeFound != 
+    'undefine') {
     myDiagram.changeNodeData(nodeFound, {
             key: 8,
             n: "HELLO",

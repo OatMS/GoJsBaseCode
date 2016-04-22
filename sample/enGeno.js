@@ -258,6 +258,7 @@ var enGeno = class {
 
         // determine the color for each attribute shape
         function attrFill(a) {
+            if(a.show == true){
             switch (a.attr) {
                 case "A":
                     return "#0000FE";
@@ -287,6 +288,10 @@ var enGeno = class {
                     return "red";
                 default:
                     return "transparent";
+            }
+            }
+            else{ 
+                return "transparent";
             }
         }
 
@@ -535,6 +540,8 @@ var enGeno = class {
     }
     */
         
+        //********** change object ***********
+        
         var newdata = array;
         for(var i =0; i<newdata.length;i++){
             if(newdata[i].a != null){
@@ -542,13 +549,14 @@ var enGeno = class {
                 newdata[i].a = [];
                 for(var j = 0; j< str.length ;j++){
                     if(str[j] =='S'){
-                        array[i].a.push({ attr:str[j] , index:17 });
+                        array[i].a.push({ attr:str[j] , index:17 ,show : true });
                     }
                     else{
-                        console.log("attr : "+array[i].a[j]+" ,index : "+j);    
-                    array[i].a.push({ attr:str[j] , index:j+1 });
+                           
+                        
+                    array[i].a.push({ attr:str[j] , index:j+1, show : true});
                     }
-                    
+                     console.log(JSON.stringify(array[i]));
 
                 }
             }
@@ -1007,10 +1015,40 @@ enGeno.prototype.reRankAttr = function(a){
                         a[j].index = j+1;
                     }
                 }
-            
     return a;
 }
 
+//********* Filter ***************************
+enGeno.prototype.filter = function(str){
+    var model = this.diagram.model;
+    
+    this.diagram.startTransaction("changed color");
+    //for each Node in diagram
+    
+    for(var i=0 ; i<model.nodeDataArray.length ; i++){
+        var data = model.nodeDataArray[i];
+        if(data.a){//if has attribite a
+            for(var j=0 ; j < data.a.length ; j++){
+
+                var a = data.a[j].attr; //for each attribute of Node 
+                var has;
+                for(var k =0 ; k<str.length ; k++){
+                    if(a == str[k]){has = true; break;}
+                    else has=false;
+                }
+                    if(has){ //if same mean user want to see this attribute
+                        model.setDataProperty(data.a[j], "show", true);
+
+                    }else{
+                        model.setDataProperty(data.a[j], "show", false);
+                    }
+            }
+        }
+    }
+    this.diagram.commitTransaction("changed color"); 
+     console.log(JSON.stringify(model.nodeDataArray));
+    
+}
 //*****************************************
 
 
