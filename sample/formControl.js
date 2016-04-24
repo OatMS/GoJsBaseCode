@@ -105,9 +105,13 @@ function clickNode(ctrl, node) {
    // console.log(node[0].data.key);
     
     
-    this.myDiagram.filter("AK");
+    //this.myDiagram.filter("AB");
+    
     //still fail
-    //this.myDiagram.addSpouse(node);
+  //this.myDiagram.addSpouse(node);
+    
+    //addSon
+    this.myDiagram.addSon(node);
 
 }
 

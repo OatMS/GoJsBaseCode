@@ -556,13 +556,13 @@ var enGeno = class {
                         
                     array[i].a.push({ attr:str[j] , index:j+1, show : true});
                     }
-                     console.log(JSON.stringify(array[i]));
+                  //   console.log(JSON.stringify(array[i]));
 
                 }
             }
         }
             //this.data = newdata;
-        console.log("data = "+JSON.stringify(array));
+        //console.log("data = "+JSON.stringify(array));
         
         
         
@@ -610,8 +610,9 @@ var enGeno = class {
             var it = nodeA.findLinksBetween(nodeB); // in either direction
             while (it.next()) {
                 var link = it.value;
+                if(link.data.category == "Marriage") return link;
                 // Link.data.category === "Marriage" means it's a marriage relationship
-                if (link.data !== null) return link;
+                //if (link.data !== null) return link;
             }
         }
         return null;
@@ -624,20 +625,20 @@ var enGeno = class {
        // console.log("setupMarriages");
         var model = this.diagram.model;
         var nodeDataArray = model.nodeDataArray;
-        for (var i = 0; i < nodeDataArray.length; i++) {
+        for (var i = 0; i < nodeDataArray.length; i++) {//เอาทุกโหนดมา
             var data = nodeDataArray[i];
-            var key = data.key;
-            var uxs = data.cou;
-            if (uxs !== undefined) {
-                if (typeof uxs === "number") uxs = [uxs];
-                for (var j = 0; j < uxs.length; j++) {
-                    var wife = uxs[j];
-                    if (key === wife) {
+            var key = data.key;//เก็บคีย์โหนดไว้
+            var uxs = data.cou; //เก็บคีย์แฟนเอาไว้
+            if (uxs !== undefined) { //ถ้ามีคีย์แฟน
+                if (typeof uxs === "number") uxs = [uxs]; // และคีย์แฟนเป็นเลข ก็ให้เก็บเข้า array
+                for (var j = 0; j < uxs.length; j++) { //วนสำหรับแฟนทุกคน
+                    var wife = uxs[j]; // เอาคีย์แฟนแต่ละคนใช้ในเชื่อของตัวแปล wife
+                    if (key === wife) { //ถ้า set เป็นแฟนกับตัวเองให้ไม่ต้องทำไร
                         // or warn no reflexive marriages
                         continue;
                     }
-                    var link = this.findMarriage(key, wife);
-                    if (link === null) {
+                    var link = this.findMarriage(key, wife);  //หาลิงค์การแต่งงานของทั้งสองคนออกมา
+                    if (link === null) { //ถ้าหาไม่ได้ค่อยเพิ่มลิงค์ หาเจอไม่ต้องทำไร
                         // add a label node for the marriage link
                         var mlab = {
                             s: "LinkLabel"
@@ -647,7 +648,7 @@ var enGeno = class {
                         var mdata = {
                             from: key,
                             to: wife,
-                            labelKeys: [mlab.key],
+                            labelKeys: [mlab.key], //label ว่ามันจะไปอยู่ชั้นไหนดี
                             category: "Marriage"
                         };
                         model.addLinkData(mdata);
@@ -852,29 +853,38 @@ enGeno.prototype.addChild = function (node, gender, data) {
     var isMarried;
     node = this.diagram.findNodeForKey(node.data.key);
     var arrNode = [];
-    node.findNodesOutOf().each(function (n) {
+     while (isMarried == null) {
+    //get all node that link with this Node
+    node.findNodesOutOf().each(function (n) {                                
         arrNode.push(n.data.key);
-        alert(n.data.key);
+      //  alert(n.data.key);
         //    n isMarried =  findMarriage(n.data.key, node.data.key);
         //  alert(isMarried.data.category);
         //    keyCou = n.data.key;
     });
 
     for (var n = 0; n < arrNode.length; n++) {
-        alert(arrNode[n]);
+        console.log("node out of "+node.data.key + " is : "+ arrNode[n]);
         isMarried = this.findMarriage(arrNode[n], node.data.key);
         alert(isMarried.data.category);
-        keyCou = n;
+        keyCou = arrNode[n];
     }
-    while (isMarried == null) {
+   
+        console.log("Don't have Married")
         var keyInto = [];
         node.findNodesInto().each(function (n) {
             keyInto.push(n.data.key);
         });
         //  var keyCou = keyInto[0].split(',');
-        var keyCou = keyInto[0];
+        for(var i =0 ; i< keyInto.length ;i++){
+            
+             isMarried = this.findMarriage(keyInto[i], node.data.key);
+            if(isMarried !== null)break;
+            
+        }
+       // var keyCou = keyInto[0];
         //  keyCou = keyCou[0];
-        isMarried = this.findMarriage(keyCou, node.data.key);
+      //  isMarried = this.findMarriage(keyCou, node.data.key);
         //alert(isMarried.data.category + " with :" + keyCou);
         //keyCou = n.data.key;
         if (isMarried == null) {
@@ -885,6 +895,12 @@ enGeno.prototype.addChild = function (node, gender, data) {
         if (isMarried.data.category == "Marriage") {
             newnode["m"] = node.data.key;
             newnode["f"] = keyCou;
+
+        }
+    }else if(node.data.s == "M"){
+        if (isMarried.data.category == "Marriage") {
+            newnode["f"] = node.data.key;
+            newnode["m"] = keyCou;
 
         }
     }
@@ -926,9 +942,9 @@ enGeno.prototype.addDaughter = function (node, data) {
 }
 
 enGeno.prototype.addSpouse = function (node, data) {
+    
     // var node = b.part.adornedPart;
     var data = data;
-    this.diagram.startTransaction("add Spouse");
    
     var newnode = {
         n: "Spouse",
@@ -946,16 +962,52 @@ enGeno.prototype.addSpouse = function (node, data) {
     if (data != null) {
         newnode = data;
     }
+    this.diagram.startTransaction("add Spouse");
     this.diagram.model.addNodeData(newnode);
+   
     this.diagram.commitTransaction("add Spouse");
-    this.setupMarriages();
-    this.setupParents();
     
     /*
-    var cdata = { from: node.data.key, to: newnode.data.key, labelKeys: [mlab.key], category: "Marriage",s: "LinkLabel" };
-    myDiagram.model.addLinkData(cdata);
-    myDiagram.commitTransaction("add Spouse and Marriage");
+    //add new node to cou of this node
+    var couKey = this.diagram.findNodeForData(newnode);
+    if(couKey){
+        this.diagram.startTransaction("add Spouse to node");
+        this.diagram.model.setDataProperty(node, "cou", couKey.data.key);
+        console.log("Key cou : "+couKey);
+        this.diagram.commitTransaction("add Spouse to node");
+        console.log(JSON.stringify(node.data));
+    }
     */
+    
+    this.setupMarriages();
+    this.setupParents();
+    console.log("Add Node Spouse");
+    
+    var newKey = this.diagram.findNodeForData(newnode).data.key;
+    console.log("newKey : "+newKey);
+    
+    var mlab ={ s: "LinkLabel"};
+    this.diagram.model.addNodeData(mlab);
+    var mdata = {
+                        from: node.data.key,
+                        to: newKey,
+                        labelKeys: [mlab.key],
+                        category: "Marriage"
+                    };
+    this.diagram.model.addLinkData(mdata);
+   
+   //  var cdata = { from: node.data.key, to: newKey, labelKeys: [mlab.key], category: "Marriage",s: "LinkLabel" };
+  //  this.diagram.model.addLinkData(cdata);
+    this.diagram.commitTransaction("add Spouse and Marriage");
+    console.log("Add Link Spouse");
+    
+    //check is set married link
+    var marrLink = this.findMarriage(node.data.key , newKey);
+    if(marrLink){
+        console.log(marrLink.data.category);
+    }
+    
+   
 }
 
 enGeno.prototype.getSelectedNode = function () {
@@ -1019,35 +1071,35 @@ enGeno.prototype.reRankAttr = function(a){
 }
 
 //********* Filter ***************************
-enGeno.prototype.filter = function(str){
+enGeno.prototype.filter = function (str) {
     var model = this.diagram.model;
-    
+
     this.diagram.startTransaction("changed color");
     //for each Node in diagram
-    
-    for(var i=0 ; i<model.nodeDataArray.length ; i++){
-        var data = model.nodeDataArray[i];
-        if(data.a){//if has attribite a
-            for(var j=0 ; j < data.a.length ; j++){
 
+    for (var i = 0; i < model.nodeDataArray.length; i++) {
+        var data = model.nodeDataArray[i];
+        if (data.a) { //if has attribite a 
+            for (var j = 0; j < data.a.length; j++) {
                 var a = data.a[j].attr; //for each attribute of Node 
                 var has;
-                for(var k =0 ; k<str.length ; k++){
-                    if(a == str[k]){has = true; break;}
-                    else has=false;
+                for (var k = 0; k < str.length; k++) {
+                    if (a == str[k]) {
+                        has = true;
+                        break;
+                    } else has = false;
                 }
-                    if(has){ //if same mean user want to see this attribute
-                        model.setDataProperty(data.a[j], "show", true);
-
-                    }else{
-                        model.setDataProperty(data.a[j], "show", false);
-                    }
+                if (has) { //if same mean user want to see this attribute
+                    model.setDataProperty(data.a[j], "show", true);
+                } else {
+                    model.setDataProperty(data.a[j], "show", false);
+                }
             }
         }
     }
-    this.diagram.commitTransaction("changed color"); 
-     console.log(JSON.stringify(model.nodeDataArray));
-    
+    this.diagram.commitTransaction("changed color");
+    console.log(JSON.stringify(model.nodeDataArray));
+
 }
 //*****************************************
 
