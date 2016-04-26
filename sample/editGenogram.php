@@ -186,7 +186,7 @@ if(isset($_GET['data'])){
         </div>
 
 <!-- Button Openfilt -->
-        <input type="button" 
+     
 
         <div id="myDiagram">
 
@@ -288,13 +288,21 @@ if(isset($_GET['data'])){
        
        var data = getUrlVars()["data"];
       // var data = $_GET("data");
-       alert(typeof data);
+      // alert(typeof data);
        
        data =  decodeURI(data);
         data =  decodeURIComponent(data);
         data = data.replace("+","");
+        data = data.slice(1,-1);
        console.log(data);
-   
+       data = JSON.parse(data);
+       alert(data);
+       console.log(data);
+       console.log(1);
+        setupForm();
+       console.log(2);
+        createDi(data);
+       console.log(3);
    }
     
     
