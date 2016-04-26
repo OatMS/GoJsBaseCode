@@ -74,13 +74,13 @@ var JsonData = [
 ];
 var Form, editForm, infoForm;
 var firstClick = true;
-
+/*
 function openFile(event) {
     alert(event.target.files[0]);
     var myDiagram = new enGeno(JsonData, "myDiagram");
 
 }
-
+*/
 function createDi(usrdata) {
     // alert('on create Di');
 
@@ -112,6 +112,8 @@ function clickNode(ctrl, node) {
     
     //addSon
     this.myDiagram.addSon(node);
+    //***********for open file ********
+    
 
 }
 

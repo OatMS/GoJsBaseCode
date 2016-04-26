@@ -65,7 +65,20 @@ $altimgline = array(
     "โดนล่วงละเมิดหรือทารุณกรรมทางเพศ",
     "ไม่ทราบความสัมพันธ์"
 );
+
+
+/*
+    echo $_SESSION["importOrCreate"];
+if(isset($_GET['data'])){
+    //echo $_GET['data'];
+    echo "<script> genGramFormFile();</script>";
     
+}else{
+    echo "data noe set";
+}
+
+*/
+
 ?>
 <html>
 
@@ -95,33 +108,11 @@ $altimgline = array(
     
 </head>
 
-<script>
-    
+
    
-    
-    function setdata(){
-        var attr ="<? echo $_GET['attr'] ?>";
-        attr = attr.split("");
-        var userdata =[{n: "<? echo $_GET['name']; ?>",
-                        key:1,m:2,f:3,
-                        s: "<? echo $_GET['gender'] ?>",
-                        a: attr,
-                    },
-                    //mother
-                    {
-                        key:2,n:"Mom",s:"F",cou:3
-                    },
-                    //father
-                    {
-                        key:3,n:"Dad",s:"M",cou:2
-                    }
-                        ];
-    setupForm();
-        createDi(userdata);
-    }
-    
-    
-</script><body id="bodyindex" onload="setdata()">
+   
+   
+   <body id="bodyindex" onload="genGramFormFile();" >
     <div id="header">
         <img src="img/logo.png" id="logo">
     </div>
@@ -194,7 +185,8 @@ $altimgline = array(
             </div>
         </div>
 
-
+<!-- Button Openfilt -->
+        <input type="button" 
 
         <div id="myDiagram">
 
@@ -243,7 +235,7 @@ $altimgline = array(
         <input id="C" type="checkbox" name="Attribute" value="C"> มะเร็ง<br>
         <input id="D" type="checkbox" name="Attribute" value="D"> โรคหัวใจ<br>
         <input id="E" type="checkbox" name="Attribute" value="E"> โรคความดันสูง<br>
-        <input id="F" type="checkbox" name="Attribute" value="F"> HIV / เอดส์<br>
+        <input id="F" type="checkbox" name="Attribute" value="F"> HIV / เอดส์<br9>
         </div>
         
         <div class="col-md-6">
@@ -264,15 +256,6 @@ $altimgline = array(
       
   </div>
   
-        
-        
-          
-    
-    
-  
-    
-    
-
 
     </div>
     
@@ -293,3 +276,58 @@ $altimgline = array(
 
 </body>
 </html>
+
+
+
+
+<!-- //****************** JS ****************** -->
+<script>
+    
+   function genGramFormFile(){
+       console.log('Gen Gram Form data');
+       
+       var data = getUrlVars()["data"];
+      // var data = $_GET("data");
+       alert(typeof data);
+       
+       data =  decodeURI(data);
+        data =  decodeURIComponent(data);
+        data = data.replace("+","");
+       console.log(data);
+   
+   }
+    
+    
+    function getUrlVars() {
+var vars = {};
+var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+vars[key] = value;
+});
+return vars;
+}
+    
+    function setdata(){
+        var attr ="<? echo $_GET['attr'] ?>";
+        attr = attr.split("");
+        var userdata =[{n: "<? echo $_GET['name']; ?>",
+                        key:1,m:2,f:3,
+                        s: "<? echo $_GET['gender'] ?>",
+                        a: attr,
+                    },
+                    //mother
+                    {
+                        key:2,n:"Mom",s:"F",cou:3
+                    },
+                    //father
+                    {
+                        key:3,n:"Dad",s:"M",cou:2
+                    }
+                        ];
+    setupForm();
+        createDi(userdata);
+    }
+    
+    
+    
+    
+</script>

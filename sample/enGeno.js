@@ -1089,7 +1089,7 @@ enGeno.prototype.reRankAttr = function (a) {
     return a;
 }
 
-//********* Filter ***************************
+//**************** Filter ********************
 enGeno.prototype.filter = function (str) {
         var model = this.diagram.model;
 
@@ -1120,7 +1120,10 @@ enGeno.prototype.filter = function (str) {
         console.log(JSON.stringify(model.nodeDataArray));
 
     }
-    //*****************************************
+  
+
+
+//************** Open Form File ***************
 
 
 
@@ -1136,7 +1139,7 @@ function openFile(event) {
     var data=[];
    var text;
   
-    var input = event.target;
+    var input = event.target[0];
     alert(input);
     var data=[];
     
@@ -1178,6 +1181,7 @@ function openFile(event) {
     
     
     return data;
+    
   };
 */
 //*************************

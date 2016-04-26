@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+<?php 
+$_SESSION["importOrCreate"] = "import";
+
+
+?>
 <html>
     <head>
         <title>enGeno</title>
@@ -20,10 +25,145 @@
        </div>
        
        <div id="menuindex">
-           <a href="create-1.php"> <img class="btmenu" src="img/menubt-create.png"> </a><br><br>
-           <a href=""> <img class="btmenu"  src="img/menubt-txt.png"> </a><br><br>
+           <a href="create-1.php" onclick="<? $_SESSION["importOrCreate"] = "create"; ?>" > <img class="btmenu" src="img/menubt-create.png"> </a><br><br>
+           
+           
+           
+           
+           <a href="#" onclick="performClick('ButtonFile')"> <img class="btmenu"  src="img/menubt-txt.png" onclick="<? $_SESSION["importOrCreate"] = "import"; ?>"> </a><br><br>
+           <input type="file" id="ButtonFile" onchange="openFile(event)" >
        </div>
+        
+        
+        
+        
+        <form action="editGenogram.php" method="get" >
+            <input name="data" type="text" id="data" style="display:none" >
+            <input id="submit" type="submit"  style="display:none" >
+            
+        </form>
+        
+        
+        
+        <div id="result"> </div>
+
         
     </body>
     
 </html>
+
+
+
+
+
+
+
+
+<script>
+                function performClick(elemId) {
+   var elem = document.getElementById(elemId);
+   if(elem && document.createEvent) {
+      var evt = document.createEvent("MouseEvents");
+      evt.initEvent("click", true, false);
+      elem.dispatchEvent(evt);
+      // openFile(elem);
+   }
+}
+               
+               
+               
+               function openFile(event) {
+                 console.log("on open File");  
+    var data=[];
+   var text;
+  
+    var input = event.target;
+    alert(input);
+    var data=[];
+    
+    var reader = new FileReader();
+    reader.onload = function(){
+      var text = reader.result;
+      var lines = text.split("\r\n");
+       
+    for(var line = 0; line < lines.length; line++){
+        
+     data.push(readByLine(lines[line]));
+       
+    }
+         //alert(JSON.stringify(data));
+      //  init(data);
+        alert(JSON.stringify(data));
+    console.log("Start set data");
+    //actionSend(data);
+        setInput(data);
+    
+    function readByLine(line){
+        var attribute = line.split(',');
+        var obj ={};
+        for(var item = 0; item < attribute.length; item++){
+            var buddle = attribute[item].split(':');
+            var key = buddle[0];
+            var value = buddle[1]
+            
+            //if Attribute a
+            if(key == 'a'){
+                value = value.split('');
+            }
+            
+            obj[key] = value;
+        }
+        return obj;
+    
+    }
+                                                                    
+        
+    };
+    reader.readAsText(input.files[0]);
+    
+    console.log("Success read File");
+    
+                   
+                   
+  };
+    
+    function setInput(data){
+        var input = document.getElementById('data');
+        input.value = "'"+JSON.stringify(data)+"'";
+       // input.value = 5;
+        var submit =document.getElementById('submit');
+        console.log("set input success");
+        console.log(input.value);
+        submit.click();
+        
+    }
+    
+    
+    
+    
+    function writeCookie(data) {
+   
+}
+    
+    var xmlhttp;
+
+    function actionSend(data) {
+        if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        }
+        else {// code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        
+        var myJsonString = JSON.stringify(data);
+        xmlhttp.onreadystatechange = respond;
+        xmlhttp.open("POST", "editGenogram.php", true);
+        xmlhttp.send(myJsonString);
+    }
+
+    function respond() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            document.getElementById('result').innerHTML = xmlhttp.responseText;
+        }
+    }
+           </script>

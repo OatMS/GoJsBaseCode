@@ -791,7 +791,7 @@ function addNode(data){
 
       
 //******************************
-
+/*
 function openFile(event) {
     var input = event.target;
     var data=[];
@@ -829,7 +829,7 @@ function openFile(event) {
   };
 
 //*************************
-
+*/
 function changeData(){
     var newData=[
         {key:1,n:"Hello"},
