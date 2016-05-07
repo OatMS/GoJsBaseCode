@@ -67,17 +67,12 @@ $altimgline = array(
 );
 
 
-/*
-    echo $_SESSION["importOrCreate"];
-if(isset($_GET['data'])){
-    //echo $_GET['data'];
-    echo "<script> genGramFormFile();</script>";
-    
-}else{
-    echo "data noe set";
+if(isset($_GET['startType'])){
+    echo $_GET['startType'];
 }
-
-*/
+else{
+    echo "start type is not set";
+}
 
 ?>
 <html>
@@ -109,10 +104,13 @@ if(isset($_GET['data'])){
 </head>
 
 
+
    
-   
-   
-   <body id="bodyindex" onload="genGramFormFile();" >
+   <body id="bodyindex" onload="<?
+                                if($_GET['startType']=="import") echo "fakeData();";
+                                else echo "setdata();";
+         
+         ?>" >
     <div id="header">
         <img src="img/logo.png" id="logo">
     </div>
@@ -123,7 +121,7 @@ if(isset($_GET['data'])){
             <div id='cssmenu'>
                 <ul>
                 
-                <li class='active has-sub'><a href='#'>สัญลักษณ์สมาชิก</a>
+                <li class='has-sub'><a href='#'>สัญลักษณ์สมาชิก</a>
                         <ul>
                            <div style="text-align:center" >
      <?
@@ -183,6 +181,32 @@ if(isset($_GET['data'])){
                     </li>
                 </ul>
             </div>
+            
+            <div id="filter" style="background-color:white;">
+               <h3 style="text-align:center">Filter</h3>
+                <div class="col-md-6"   style="background-color:white;">
+         <input id="A" onclick="setFilter()" type="checkbox" name="Attribute" value="A" >ภาวะซึมเศร้า<br>
+        <input id="B" onclick="setFilter()" type="checkbox" name="Attribute" value="B"> ภาวะโรคอ้วน<br>
+        <input id="C" onclick="setFilter()" type="checkbox" name="Attribute" value="C"> มะเร็ง<br>
+        <input id="D" onclick="setFilter()" type="checkbox" name="Attribute" value="D"> โรคหัวใจ<br>
+        <input id="E" onclick="setFilter()" type="checkbox" name="Attribute" value="E"> โรคความดันสูง <br>
+        <input id="F" onclick="setFilter()" type="checkbox" name="Attribute" value="F"> HIV / เอดส์ <br9>
+        </div>
+        
+        <div class="col-md-6"  style="background-color:white;">
+        
+        <input id="G" onclick="setFilter()" type="checkbox" name="Attribute" value="G"> โรคตับอักเสบ <br>
+        <input id="H" onclick="setFilter()" type="checkbox" name="Attribute" value="H"> โรคเบาหวาน <br>
+        <input id="I" onclick="setFilter()" type="checkbox" name="Attribute" value="I"> โรคไขข้อ <br>
+        <input id="J" onclick="setFilter()" type="checkbox" name="Attribute" value="J"> ออทิสติก <br>
+        <input id="K" onclick="setFilter()" type="checkbox" name="Attribute" value="K"> อัลไซเมอร์ <br>
+        <input id="L" onclick="setFilter()" type="checkbox" name="Attribute" value="L"> โรคติดต่อทางเพศสัมพันธ์ <br>
+        </div>
+            </div>
+            
+            
+            
+            
         </div>
 
 <!-- Button Openfilt -->
@@ -200,24 +224,27 @@ if(isset($_GET['data'])){
      
      <!------- Info Form --------->
       <div class="form" id="infoForm">
-         <!--
+         
         <h2 style="">ข้อมูลสมาชิกครอบครัว</h2>
+        <img src="img/mockup/node.PNG" style="margin-left:50px;">
+        <form >
+         <h3>ชื่อ : .....<span id="nameText" > </span>.... </h3>
+         <h3>เพศ : .....<span id="genderText" > </span>.... </h3>
+         
+         
         
-        <form readonly="readonly" >
-         <h3>ชื่อ   </h3>
          
-         <input readonly="readonly" type="text" id="nameNode">
-         
-         <h3>โรค</h3>
-         
+         <h3 id="diseases"> โรค</h3>
+         <div id="attr" style="padding-left:50px;">
+             
+         </div>
          
         </form>
-    -->
      </div>
      
          
     <!-- ----- edit Form ------------------->
-     <div class="form" id="editForm">
+     <div class="form" id="editForm" hidden>
          
         <h2 style="">ข้อมูลสมาชิกครอบครัว</h2>
         <img src="img/mockup/node.PNG" style="margin-left:50px;">
@@ -228,26 +255,26 @@ if(isset($_GET['data'])){
          <input type="text" id="nameNode">
          
          <h3>โรค</h3>
-         
+        <!-- 
          <div class="col-md-6">
          <input id="A"  type="checkbox" name="Attribute" value="A" >ภาวะซึมเศร้า<br>
         <input id="B" type="checkbox" name="Attribute" value="B"> ภาวะโรคอ้วน<br>
         <input id="C" type="checkbox" name="Attribute" value="C"> มะเร็ง<br>
         <input id="D" type="checkbox" name="Attribute" value="D"> โรคหัวใจ<br>
-        <input id="E" type="checkbox" name="Attribute" value="E"> โรคความดันสูง<br>
-        <input id="F" type="checkbox" name="Attribute" value="F"> HIV / เอดส์<br9>
+        <input id="E" type="checkbox" name="Attribute" value="E"> โรคความดันสูง <br>
+        <input id="F" type="checkbox" name="Attribute" value="F"> HIV / เอดส์ <br9>
         </div>
         
         <div class="col-md-6">
         
-        <input id="G" type="checkbox" name="Attribute" value="G">โรคตับอักเสบ<br>
-        <input id="H" type="checkbox" name="Attribute" value="H"> โรคเบาหวาน<br>
-        <input id="I" type="checkbox" name="Attribute" value="I"> โรคไขข้อ<br>
-        <input id="J" type="checkbox" name="Attribute" value="J"> ออทิสติก<br>
-        <input id="K" type="checkbox" name="Attribute" value="K">อัลไซเมอร์<br>
-        <input id="L" type="checkbox" name="Attribute" value="L"> โรคติดต่อทางเพศสัมพันธ์<br>
+        <input id="G" type="checkbox" name="Attribute" value="G"> โรคตับอักเสบ <br>
+        <input id="H" type="checkbox" name="Attribute" value="H"> โรคเบาหวาน <br>
+        <input id="I" type="checkbox" name="Attribute" value="I"> โรคไขข้อ <br>
+        <input id="J" type="checkbox" name="Attribute" value="J"> ออทิสติก <br>
+        <input id="K" type="checkbox" name="Attribute" value="K"> อัลไซเมอร์ <br>
+        <input id="L" type="checkbox" name="Attribute" value="L"> โรคติดต่อทางเพศสัมพันธ์ <br>
         </div>
-        
+        -->
         
         </form>
     
@@ -298,12 +325,40 @@ if(isset($_GET['data'])){
        data = JSON.parse(data);
        alert(data);
        console.log(data);
-       console.log(1);
-        setupForm();
-       console.log(2);
+      
         createDi(data);
-       console.log(3);
    }
+    
+    function fakeData(){
+        var data = [
+    { key: 0, n: "Aaron", s: "M", m:-10, f:-11, cou: 1, a: ["C", "F", "K"] },
+    { key: 1, n: "Alice", s: "F", m:-12, f:-13, a: ["B", "H", "K"] },
+    { key: 2, n: "Bob", s: "M", m: 1, f: 0, cou: 3, a: ["C", "H", "L"] },
+    { key: 3, n: "Barbara", s: "F", a: ["C"] },
+    { key: 4, n: "Bill", s: "M", m: 1, f: 0, cou: 5, a: ["E", "H"] },
+    { key: 5, n: "Brooke", s: "F", a: ["B", "H", "L"] },
+    { key: 6, n: "Claire", s: "F", m: 1, f: 0, a: ["C"] },
+    { key: 7, n: "Carol", s: "F", m: 1, f: 0, a: ["C", "I"] },
+    { key: 8, n: "Chloe", s: "F", m: 1, f: 0, cou: 9, a: ["E"] },
+    { key: 9, n: "Chris", s: "M", a: ["B", "H"] },
+    { key: 10, n: "Ellie", s: "F", m: 3, f: 2, a: ["E", "G"] },
+    { key: 11, n: "Dan", s: "M", m: 3, f: 2, a: ["B", "J"] },
+    { key: 12, n: "Elizabeth", s: "F", cou: 13, a: ["J"] },
+    { key: 13, n: "David", s: "M", m: 5, f: 4, a: ["B", "H"] },
+    { key: 14, n: "Emma", s: "F", m: 5, f: 4, a: ["E", "G"] },
+    { key: 15, n: "Evan", s: "M", m: 8, f: 9, a: ["F", "H"] },
+    { key: 16, n: "Ethan", s: "M", m: 8, f: 9, a: ["D", "K", "S"] },
+    { key: 17, n: "Eve", s: "F", cou: 16, a: ["B", "F", "L", "S"] },
+    { key: 18, n: "Emily", s: "F", m: 8, f: 9 },
+    { key: 19, n: "Fred", s: "M", m: 17, f: 16, a: ["B"] },
+    { key: 20, n: "Faith", s: "F", m: 17, f: 16, a: ["L"] },
+    { key: 21, n: "Felicia", s: "F", m: 12, f: 13, a: ["H"] },
+    { key: 22, n: "Frank", s: "M", m: 12, f: 13, a: ["B", "H"] }
+
+ 
+];
+        createDi(data);
+    }
     
     
     function getUrlVars() {
@@ -331,11 +386,17 @@ return vars;
                         key:3,n:"Dad",s:"M",cou:2
                     }
                         ];
-    setupForm();
+ 
         createDi(userdata);
     }
     
     
     
     
+    //**************************************
+
+
+
+//----------------------------
+
 </script>

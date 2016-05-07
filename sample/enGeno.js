@@ -191,11 +191,13 @@ var enGeno = class {
 
     constructor(data, div) {
 
-        var data;
+        var array;
         var diagram;
         var contextNode;
         var nodeOnRightClicked;
         //  this.setContextNode();
+        this.array = data;
+        
 
         //if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
         /*
@@ -239,6 +241,8 @@ var enGeno = class {
                     }),
                     $(go.Placeholder)
                 ),
+            click : clickDiagram
+            ,
                 layout: // use a custom layout, defined below
                     $(GenogramLayout, {
                     direction: 90,
@@ -487,7 +491,10 @@ var enGeno = class {
 
 
     setupDiagram(focusId) {
-
+        
+        var array = this.array;
+        console.log("on create data = "+JSON.stringify(this.array));
+/*
         console.log("SetupDiagram");
         //  var array = this.data;
         var array = [
@@ -526,7 +533,7 @@ var enGeno = class {
                 cou: 4
             }
 ];
-
+*/
         //  var newdata = [];
         //var newdata = this.data;
         //  var newdata = array;
@@ -825,7 +832,7 @@ enGeno.prototype.setContextNode = function () {
 
 enGeno.prototype.addNode = function (data) {
     this.diagram.startTransaction('new node');
-    if (data == 'undefind') {
+    if (data) {
         var data = {
             key: 5,
             n: "NewNode",
@@ -837,8 +844,9 @@ enGeno.prototype.addNode = function (data) {
     }
     this.diagram.model.addNodeData(data);
     part = this.diagram.findPartForData(data);
-    part.location = this.diagram.toolManager.contextMenuTool.mouseDownPoint;
+   // part.location = this.diagram.toolManager.contextMenuTool.mouseDownPoint;
     this.diagram.commitTransaction('new node');
+   this.load();
 }
 
 
@@ -878,7 +886,7 @@ enGeno.prototype.addChild = function (node, gender, data) {
         for (var n = 0; n < arrNode.length; n++) {
             console.log("node out of " + node.data.key + " is : " + arrNode[n]);
             isMarried = this.findMarriage(arrNode[n], node.data.key);
-            alert(isMarried.data.category);
+           // alert(isMarried.data.category);
             if(isMarried){
             keyCou = arrNode[n];
             break;
@@ -1031,7 +1039,7 @@ enGeno.prototype.addSpouse = function (node, data) {
 
 enGeno.prototype.getSelectedNode = function () {
 
-    console.log("number : " + this.diagram.selection.count);
+  //  console.log("number : " + this.diagram.selection.count);
 
     //return Array of Node
     var part = this.diagram.selection.iterator;
@@ -1041,7 +1049,8 @@ enGeno.prototype.getSelectedNode = function () {
     while (part.next()) {
         //print Node
         var node = part.value;
-        console.log("Key: " + node.data.key + ", Name : " + node.data.n);
+      //  console.log("Key: " + node.data.key + ", Name : " + node.data.n);
+      // var newnode = this.setFormatNode(node);
         arrNode.push(node);
         // this.selectedNodes.push(node);
 
@@ -1108,7 +1117,7 @@ enGeno.prototype.filter = function (str) {
                             break;
                         } else has = false;
                     }
-                    if (has) { //if same mean user want to see this attribute
+                    if (has || !str) { //if same mean user want to see this attribute
                         model.setDataProperty(data.a[j], "show", true);
                     } else {
                         model.setDataProperty(data.a[j], "show", false);
@@ -1121,6 +1130,28 @@ enGeno.prototype.filter = function (str) {
 
     }
   
+
+enGeno.prototype.setFormatNode = function (node){
+    var newNode = new Object;
+Object.assign(newNode, node);
+
+    var newNode =  Object.create(node.data);
+    console.log(JSON.stringify(newNode));
+        if(newNode.a){
+            var tempA = newNode.a;
+            var str= "";
+            for(var i =0;i<tempA.length;i++){
+                str += tempA[i].attr;
+            }
+            newNode.a = str;
+             console.log(JSON.stringify(node.data));
+        }
+    return newNode;
+   
+}
+
+
+//********** load function******************
 
 
 //************** Open Form File ***************

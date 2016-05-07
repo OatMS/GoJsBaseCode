@@ -87,6 +87,7 @@ function createDi(usrdata) {
     myDiagram = new enGeno(usrdata, "myDiagram");
     myDiagram.init();
     //  myDiagram.addNode();
+       setInfoForm();
 
 }
 
@@ -111,16 +112,23 @@ function clickNode(ctrl, node) {
   //this.myDiagram.addSpouse(node);
     
     //addSon
-    this.myDiagram.addSon(node);
+    //this.myDiagram.addSon(node);
     //***********for open file ********
+    setInfoForm();
     
+    //this.myDiagram.addDaughter(node);
+    
+   // var newNode = {key:23 ,m:22,f:21,s:'F',a:'ABC'};
+  //  this.myDiagram.addNode(newNode);
+ 
 
 }
 
 
 
 function clickDiagram() {
-
+    setInfoForm();
+    this.myDiagram.load();
 }
 
 
@@ -204,22 +212,88 @@ function editNode(e, b) {
 
 }
 
+function getNameAttr(a){
+    switch(a){
+            case'A':return "ภาวะซึมเศร้า";break;
+            case'B':return "ภาวะโรคอ้วน";break;
+            case'C':return "โรคหัวใจ" ; break;
+            case'D':return "มะเร็ง" ;break;
+            case'E':return "โรคความดันสูง" ;break;
+            case'F':return "HIV/เอดส์" ;break;
+            case'G':return "โรคตับอักเสบ" ;break;
+            case'H':return "โรคเบาหวาน" ;break;
+            case'I':return "โรคไขข้อ" ;break;
+            case'J':return "ออทิสติก" ;break;
+            case'K':return "อัลไซเมอร์" ;break;
+            case'L':return "โรคติดต่อทางเพศสัมพันธ์" ;break;
+            case'S':return "เสียชีวิตแล้ว" ;break;
+        default: return "";
+    }
+}
 
 
-//-------------------Context----------------------------
+//********** set info form************
+function setInfoForm(){
+     var nodeSelect =   this.myDiagram.getSelectedNode();
+    var nameText = document.getElementById("nameText");
+    var genderText = document.getElementById("genderText");
+    var infoForm = document.getElementById("infoForm");
+    var diseases = document.getElementById("diseases");
+    var attr = document.getElementById("attr");
+    
+
+    if(nodeSelect.length > 0){
+        nameText.innerHTML = nodeSelect[0].data.n;
+        
+        if(nodeSelect[0].data.s == 'F'){
+            genderText.innerHTML = "หญิง";
+        }else{
+            genderText.innerHTML = "ชาย";
+        }
+        attr.innerHTML ="";
+        
+        if(nodeSelect[0].data.a){
+           // alert(JSON.stringify(nodeSelect[0].data));
+            diseases.style.visibility='visible';
+             var rip = false;
+            for(var i =0 ; i<nodeSelect[0].data.a.length;i++){
+                var ai = nodeSelect[0].data.a[i].attr;
+               
+                if(ai == 'S'){
+                    rip =true;
+                }
+                else{
+                    attr.innerHTML += '<p>• '+getNameAttr(ai)+'</p></br>';
+                    }
+            }
+            if(rip){
+                attr.innerHTML += '<br><p> สถานะ : '+getNameAttr(ai)+'</p></br>';
+            }
+        }
+        else{
+            diseases.style.visibility='hidden';
+            attr.innerHTML ="";
+        }
+    }else{
+        nameText.innerHTML ="";
+        genderText.innerHTML="";
+        attr.innerHTML ="";
+        
+    }
+    
+}
 
 
-var notepad = document;
-notepad.addEventListener("contextmenu", function (event) {
-    event.preventDefault();
-    var ctxMenu = document.getElementById("ctxMenu");
-    ctxMenu.style.display = "block";
-    ctxMenu.style.left = (event.pageX - 10) + "px";
-    ctxMenu.style.top = (event.pageY - 10) + "px";
-}, false);
-notepad.addEventListener("click", function (event) {
-    var ctxMenu = document.getElementById("ctxMenu");
-    ctxMenu.style.display = "";
-    ctxMenu.style.left = "";
-    ctxMenu.style.top = "";
-}, false);
+function setFilter(){
+    var attribute = document.getElementsByName("Attribute");
+    var str ="";
+    for (var i = 0; i < attribute.length; i++) {
+        if(attribute[i].checked == true){
+            str +=attribute[i].value;
+        }
+    }
+    if(attribute.length ==0){
+        this.myDiagram.filter();
+    }
+    else this.myDiagram.filter(str);
+}

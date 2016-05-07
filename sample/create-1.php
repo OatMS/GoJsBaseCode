@@ -90,6 +90,7 @@
             <a href="index.php"><img style="float:left;" src="img/mockup/home-button.PNG"></a>
         
         </div>
+        <input name="startType" type="text" value="create" id="startType" style="display:none" >
     </form>
 
 

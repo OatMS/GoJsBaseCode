@@ -57,7 +57,7 @@
         <input src="img/mockup/next-button.PNG" type="image" alt="submit" style="float:right;" >
             <a href="create-1.php"><img style="float:left;" src="img/mockup/back-button.PNG"></a>
         
-        
+        <input name="startType" type="text" value="create" id="startType" style="display:none" >
         
     </form>
     

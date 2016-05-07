@@ -25,20 +25,21 @@ $_SESSION["importOrCreate"] = "import";
        </div>
        
        <div id="menuindex">
-           <a href="create-1.php" onclick="<? $_SESSION["importOrCreate"] = "create"; ?>" > <img class="btmenu" src="img/menubt-create.png"> </a><br><br>
+           <a href="create-1.php" onclick="setCreateType();" > <img class="btmenu" src="img/menubt-create.png"> </a><br><br>
            
            
            
            
            <a href="#" onclick="performClick('ButtonFile')"> <img class="btmenu"  src="img/menubt-txt.png" onclick="<? $_SESSION["importOrCreate"] = "import"; ?>"> </a><br><br>
-           <input type="file" id="ButtonFile" onchange="openFile(event)" >
+           <input type="file" id="ButtonFile" onchange="openFile(event)" style="display:none"  >
        </div>
         
         
         
         
-        <form action="editGenogram.php" method="get" >
+        <form id="setWay" action="editGenogram.php" method="get" >
             <input name="data" type="text" id="data" style="display:none" >
+            <input name="startType" type="text" id="startType" style="display:none" >
             <input id="submit" type="submit"  style="display:none" >
             
         </form>
@@ -78,7 +79,7 @@ $_SESSION["importOrCreate"] = "import";
    var text;
   
     var input = event.target;
-    alert(input);
+//alert(input);
     var data=[];
     
     var reader = new FileReader();
@@ -91,9 +92,7 @@ $_SESSION["importOrCreate"] = "import";
      data.push(readByLine(lines[line]));
        
     }
-         //alert(JSON.stringify(data));
-      //  init(data);
-        alert(JSON.stringify(data));
+       
     console.log("Start set data");
     //actionSend(data);
         setInput(data);
@@ -133,37 +132,25 @@ $_SESSION["importOrCreate"] = "import";
        // input.value = 5;
         var submit =document.getElementById('submit');
         console.log("set input success");
-        console.log(input.value);
+       // console.log(input.value);
+        
+        //set type start
+        var startType = document.getElementById('startType');
+        startType.value = "import";
+        
         submit.click();
         
     }
     
-    
-    
-    
-    function writeCookie(data) {
-   
-}
-    
-    var xmlhttp;
-
-    function actionSend(data) {
-        if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
-            xmlhttp = new XMLHttpRequest();
-        }
-        else {// code for IE6, IE5
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        
-        var myJsonString = JSON.stringify(data);
-        xmlhttp.onreadystatechange = respond;
-        xmlhttp.open("POST", "editGenogram.php", true);
-        xmlhttp.send(myJsonString);
+    function setCreateType(){
+        var setWay = document.getElementById('setWay');
+        setWay.action = "create-1.php";
+        var startType = document.getElementById('startType');
+        startType.value = "create";
+        var submit =document.getElementById('submit');
+         submit.click();
     }
-
-    function respond() {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            document.getElementById('result').innerHTML = xmlhttp.responseText;
-        }
-    }
+    
+    
+    
            </script>

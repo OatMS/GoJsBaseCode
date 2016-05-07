@@ -1067,3 +1067,10 @@ var Genogram = function (agr, div) {
     return diagram;
 
 }
+
+
+
+
+
+
+
