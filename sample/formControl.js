@@ -108,27 +108,28 @@ function clickNode(ctrl, node) {
     
     //this.myDiagram.filter("AB");
     
-    //still fail
-  //this.myDiagram.addSpouse(node);
+//this.myDiagram.addSpouse(node);
+    
+    //console.log(this.myDiagram.genKey());
     
     //addSon
-    //this.myDiagram.addSon(node);
+   this.myDiagram.addSon(node);
     //***********for open file ********
-    setInfoForm();
-    
-    //this.myDiagram.addDaughter(node);
-    
+   
+   //.myDiagram.addDaughter(node);
+  //  this.myDiagram.load();
+console.log(this.myDiagram.findMarriageArray(node.data.key));
    // var newNode = {key:23 ,m:22,f:21,s:'F',a:'ABC'};
   //  this.myDiagram.addNode(newNode);
- 
+  setInfoForm();
 
 }
 
 
 
 function clickDiagram() {
-    setInfoForm();
     this.myDiagram.load();
+    setInfoForm();
 }
 
 
@@ -168,7 +169,7 @@ function doubleClickNode(e, b) {
          console.log("cannot find node");   
     }
     */
-    this.myDiagram.addSon(node);
+  // this.myDiagram.addSon(node);
     
 
 }
@@ -240,6 +241,53 @@ function setInfoForm(){
     var infoForm = document.getElementById("infoForm");
     var diseases = document.getElementById("diseases");
     var attr = document.getElementById("attr");
+    var  nodeimg = document.getElementById("nodeimg");
+    
+    var  attrimg1 = document.getElementById("attrimg1");
+    var  attrimg2 = document.getElementById("attrimg2");
+    var  attrimg3 = document.getElementById("attrimg3");
+    var  attrimg4 = document.getElementById("attrimg4");
+    var attrimg = [attrimg1,attrimg2,attrimg3,attrimg4];
+
+    //set all attrimg to white when click other node
+    for(var i=0;i<4;i++){
+        attrimg[i].style.backgroundColor = "#FFFFFF";
+    }
+    
+    
+    function attrFill(a) {
+           
+                switch (a.attr) {
+                    case "A":
+                        return "#0000FE";
+                    case "B":
+                        return "#FF00FF";
+                    case "C":
+                        return "#FE0000";
+                    case "D":
+                        return "#C00000";
+                    case "E":
+                        return "#C00000";
+                    case "F":
+                        return "#FFC000";
+                    case "G":
+                        return "#01FF00";
+                    case "H":
+                        return "#800080";
+                    case "I":
+                        return "#939FBB";
+                    case "J":
+                        return "#01FFFF";
+                    case "K":
+                        return "#359AFF";
+                    case "L":
+                        return "#FFFF00";
+                    case "S":
+                        return "red";
+                    default:
+                        return "transparent";
+                }
+        }
     
 
     if(nodeSelect.length > 0){
@@ -247,8 +295,10 @@ function setInfoForm(){
         
         if(nodeSelect[0].data.s == 'F'){
             genderText.innerHTML = "หญิง";
+            nodeimg.src = "img/femalenode.png";
         }else{
             genderText.innerHTML = "ชาย";
+            nodeimg.src = "img/malenode.png";
         }
         attr.innerHTML ="";
         
@@ -257,17 +307,21 @@ function setInfoForm(){
             diseases.style.visibility='visible';
              var rip = false;
             for(var i =0 ; i<nodeSelect[0].data.a.length;i++){
-                var ai = nodeSelect[0].data.a[i].attr;
+                var ai = nodeSelect[0].data.a[i];
                
                 if(ai == 'S'){
                     rip =true;
                 }
                 else{
                     attr.innerHTML += '<p>• '+getNameAttr(ai)+'</p></br>';
+                    if(i<4){
+                    attrimg[i].style.backgroundColor = attrFill(ai);
+                }
                     }
             }
             if(rip){
                 attr.innerHTML += '<br><p> สถานะ : '+getNameAttr(ai)+'</p></br>';
+                
             }
         }
         else{
@@ -278,6 +332,37 @@ function setInfoForm(){
         nameText.innerHTML ="";
         genderText.innerHTML="";
         attr.innerHTML ="";
+        
+    }
+    
+    var attr = nodeSelect[0].data.aobj;
+    //setimg attr
+    
+        if(attr){
+           // alert(JSON.stringify(nodeSelect[0].data));
+            
+            for(var i =0 ; i<attr.length;i++){
+                var ai = attr[i].attr;
+               
+                if(ai == 'S'){
+                    rip =true;
+                }
+                else{
+                    
+                    if(i<4){
+                    attrimg[i].style.backgroundColor = attrFill(attr[i]);
+                }
+                    }
+            }
+            if(rip){
+              //  attr.innerHTML += '<br><p> สถานะ : '+getNameAttr(ai)+'</p></br>';
+                
+            }
+   
+    }else{
+   //     nameText.innerHTML ="";
+       // genderText.innerHTML="";
+     //   attr.innerHTML ="";
         
     }
     

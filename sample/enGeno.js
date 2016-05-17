@@ -191,13 +191,81 @@ var enGeno = class {
 
     constructor(data, div) {
 
-        var array;
+
         var diagram;
         var contextNode;
         var nodeOnRightClicked;
         //  this.setContextNode();
-        this.array = data;
-        
+        var originArray = data;
+
+
+        this.setOriginalArray = function (ori) {
+            originArray = ori;
+        }
+
+        this.pushObjInOriginalArray = function (obj) {
+            originArray.push(obj);
+        }
+        this.getOriginalArray = function () {
+            var arr = JSON.parse(JSON.stringify(originArray));
+            //     console.log("inget origin = "+JSON.stringify(arr));
+            return arr;
+        }
+
+        this.setProopotyArray = function (key, pro, value) {
+            for (var i = 0; i < originArray.length; i++) {
+                if (originArray[i].key == key) {
+                    originArray[i][pro] = value;
+                }
+            }
+        }
+
+        this.addSpouseArray = function (key, value) {
+            for (var i = 0; i < originArray.length; i++) {
+                if (originArray[i].key == key) {
+                    if (typeof originArray[i].cou == "object") {
+                        var can = true;
+                        for (var j = 0; j < originArray[i].cou.length; j++) {
+                            if (key == originArray[i].cou[j]) {
+                                can = false;
+                                break;
+                            }
+
+                        }
+                        if (can) {
+                            originArray[i].cou.push(value);
+                        }
+                    } else if (typeof originArray[i].cou == "number") {
+                        var temp = originArray[i].cou;
+                        originArray[i].cou = [temp, value];
+
+                    } else {
+                        originArray[i].cou = value;
+                    }
+                }
+            }
+        }
+
+        this.deleteSpouseArray = function (key, value) {
+            for (var i = 0; i < originArray.length; i++) {
+                if (originArray[i].key == key) {
+                    if (typeof originArray[i].cou == "object") {
+
+                        var index = originArray[i].cou.indexOf(value);
+                        if (index > -1) {
+                            array.splice(index, 1);
+                        } else if (typeof originArray[i].cou == "number") {
+                            originArray[i].cou = '';
+
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+
 
         //if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
         /*
@@ -241,8 +309,7 @@ var enGeno = class {
                     }),
                     $(go.Placeholder)
                 ),
-            click : clickDiagram
-            ,
+                click: clickDiagram,
                 layout: // use a custom layout, defined below
                     $(GenogramLayout, {
                     direction: 90,
@@ -270,34 +337,34 @@ var enGeno = class {
         function attrFill(a) {
             if (a.show == true) {
                 switch (a.attr) {
-                    case "A":
-                        return "#0000FE";
-                    case "B":
-                        return "#FF00FF";
-                    case "C":
-                        return "#FE0000";
-                    case "D":
-                        return "#C00000";
-                    case "E":
-                        return "#C00000";
-                    case "F":
-                        return "#FFC000";
-                    case "G":
-                        return "#01FF00";
-                    case "H":
-                        return "#800080";
-                    case "I":
-                        return "#939FBB";
-                    case "J":
-                        return "#01FFFF";
-                    case "K":
-                        return "#359AFF";
-                    case "L":
-                        return "#FFFF00";
-                    case "S":
-                        return "red";
-                    default:
-                        return "transparent";
+                case "A":
+                    return "#0000FE";
+                case "B":
+                    return "#FF00FF";
+                case "C":
+                    return "#FE0000";
+                case "D":
+                    return "#C00000";
+                case "E":
+                    return "#C00000";
+                case "F":
+                    return "#FFC000";
+                case "G":
+                    return "#01FF00";
+                case "H":
+                    return "#800080";
+                case "I":
+                    return "#939FBB";
+                case "J":
+                    return "#01FFFF";
+                case "K":
+                    return "#359AFF";
+                case "L":
+                    return "#FFFF00";
+                case "S":
+                    return "red";
+                default:
+                    return "transparent";
                 }
             } else {
                 return "transparent";
@@ -391,7 +458,7 @@ var enGeno = class {
                             ),
                             margin: 1
                         },
-                        new go.Binding("itemArray", "a")
+                        new go.Binding("itemArray", "aobj")
                     )
                 ),
                 $(go.TextBlock, {
@@ -436,7 +503,7 @@ var enGeno = class {
                             ),
                             margin: 1
                         },
-                        new go.Binding("itemArray", "a")
+                        new go.Binding("itemArray", "aobj")
                     )
                 ),
                 $(go.TextBlock, {
@@ -491,49 +558,51 @@ var enGeno = class {
 
 
     setupDiagram(focusId) {
-        
-        var array = this.array;
-        console.log("on create data = "+JSON.stringify(this.array));
-/*
-        console.log("SetupDiagram");
-        //  var array = this.data;
-        var array = [
-            {
-                key: 1,
-                n: "Eve",
-                s: "F",
-                m: 2,
-                a: "BHS"
-            },
-            {
-                key: 2,
-                n: 'Mom',
-                s: 'F',
-                cou: 3,
-                a: "CGK"
-            },
-            {
-                key: 3,
-                n: "Dad",
-                s: 'M',
-                a: "AELS"
-            },
-            {
-                key: 4,
-                n: "Ever",
-                s: "F",
-                m: 2,
-                f: 3,
-                a: "BH"
-            },
-            {
-                key: 5,
-                n: 'Ever',
-                s: 'M',
-                cou: 4
-            }
-];
-*/
+        var array = this.getOriginalArray();
+        console.log("originArray  = " + JSON.stringify(this.getOriginalArray()));
+
+        // console.log("on create data = "+JSON.stringify(this.array));
+        /*
+                console.log("SetupDiagram");
+                //  var array = this.data;
+                var array = [
+                    {
+                        key: 1,
+                        n: "Eve",
+                        s: "F",
+                        m: 2,
+                        a: "BHS"
+                    },
+                    {
+                        key: 2,
+                        n: 'Mom',
+                        s: 'F',
+                        cou: 3,
+                        a: "CGK"
+                        a: "CGK"
+                    },
+                    {
+                        key: 3,
+                        n: "Dad",
+                        s: 'M',
+                        a: "AELS"
+                    },
+                    {
+                        key: 4,
+                        n: "Ever",
+                        s: "F",
+                        m: 2,
+                        f: 3,
+                        a: "BH"
+                    },
+                    {
+                        key: 5,
+                        n: 'Ever',
+                        s: 'M',
+                        cou: 4
+                    }
+        ];
+        */
         //  var newdata = [];
         //var newdata = this.data;
         //  var newdata = array;
@@ -556,12 +625,13 @@ var enGeno = class {
 
         var newdata = array;
         for (var i = 0; i < newdata.length; i++) {
-            if (newdata[i].a != null) {
+            //   console.log(JSON.stringify(newdata[i]));
+            if (newdata[i] && newdata[i].a) {
                 var str = newdata[i].a;
-                newdata[i].a = [];
+                newdata[i].aobj = [];
                 for (var j = 0; j < str.length; j++) {
                     if (str[j] == 'S') {
-                        array[i].a.push({
+                        array[i].aobj.push({
                             attr: str[j],
                             index: 17,
                             show: true
@@ -569,7 +639,7 @@ var enGeno = class {
                     } else {
 
 
-                        array[i].a.push({
+                        array[i].aobj.push({
                             attr: str[j],
                             index: j + 1,
                             show: true
@@ -581,7 +651,7 @@ var enGeno = class {
             }
         }
         //this.data = newdata;
-        //console.log("data = "+JSON.stringify(array));
+        //   console.log("data = "+JSON.stringify(array));
 
 
 
@@ -615,10 +685,20 @@ var enGeno = class {
 
         this.setupMarriages();
         this.setupParents();
+        this.diagram.animationManager.isEnabled = false;
+
 
     };
 
-
+     haveKey(key){
+         var arr = getOriginalArray();
+         for(var i=0;i<arr.length;i++){
+             if(arr[i].key == key)
+                 return true;
+         }
+         
+         return false;
+     }
 
     findMarriage(a, b) { // A and B are node keys
         // console.log("findMarriage");
@@ -636,7 +716,55 @@ var enGeno = class {
         }
         return null;
     }
-
+    
+    //เหลือเช็คอาเรย์มันแอดเลขซ้ำค่า
+    findMarriageArray(key){
+        
+        
+        
+        var arr = this.getOriginalArray();
+        var arrCou =[];
+        function hasNum(num){
+            for(var i=0;i<arrCou.length;i++){
+                if(arrCou[i] == num)
+                    return true;
+            }
+            return false;
+        }
+        //for everynode
+        for(var i=0;i<arr.length;i++){
+            //keyตัวเอง มี cou
+             if(arr[i].key == key && arr[i].cou){
+                if(typeof arr[i].cou == "object"){ 
+                    for(var j=0;j<arr[i].cou.length;j++){
+                        if(!hasNum(arr[i].cou[j])){
+                        arrCou.push(arr[i].cou[j]);
+                        console.log("1.arr[i].key == key && arr[i].cou--"+arr[i].cou[j]);}
+                    }
+                }else if(typeof arr[i].cou =='number')
+                     if(!hasNum(arr[i].cou)){
+                    arrCou.push(arr[i].cou);
+                 console.log("2.typeof arr[i].cou ==number--"+arr[i].cou);}
+            }
+            else if( arr[i].cou && typeof arr[i].cou =='object'){
+                for(var j=0;j<arr[i].length;j++){
+                    //marry formanother node
+                    if(arr[i].cou[j] == key){
+                         if(!hasNum(arr[i].key)){
+                        arrCou.push(arr[i].key);
+                        console.log("3.arr[i].cou[j] == key--"+arr[i].key);}
+                    }
+                }
+            }
+            else if(arr[i].cou && typeof arr[i].cou =='number' && arr[i].cou == key){
+                 if(!hasNum(arr[i].key)){
+                arrCou.push(arr[i].key);
+                console.log("4.arr[i].cou && typeof arr[i].cou =='number' && arr[i].cou == key-"+arr[i].key);}
+            }
+            
+        }
+        return arrCou;
+    }
 
 
     // now process the node data to determine marriages
@@ -651,7 +779,7 @@ var enGeno = class {
             if (uxs !== undefined) { //ถ้ามีคีย์แฟน
                 if (typeof uxs === "number") uxs = [uxs]; // และคีย์แฟนเป็นเลข ก็ให้เก็บเข้า array
                 for (var j = 0; j < uxs.length; j++) { //วนสำหรับแฟนทุกคน
-                    var wife = uxs[j]; // เอาคีย์แฟนแต่ละคนใช้ในเชื่อของตัวแปล wife
+                    var wife = uxs[j]; // เอาคีย์แฟนแต่ละคนใช้ในชื่อของตัวแปล wife
                     if (key === wife) { //ถ้า set เป็นแฟนกับตัวเองให้ไม่ต้องทำไร
                         // or warn no reflexive marriages
                         continue;
@@ -682,7 +810,7 @@ var enGeno = class {
 
     }
 
-    // process parent-child relationships once all marriages are known
+    //process parent-child relationships once all marriages are known
 
 
     setupParents() {
@@ -738,10 +866,11 @@ var enGeno = class {
         //  this.setContextNode();
         //  console.log("in function init");
         this.setupDiagram(1);
+
         //  console.log("can set Diagram");
-        this.setupMarriages();
+        //  this.setupMarriages();
         //  console.log("can set married");
-        this.setupParents();
+        //  this.setupParents();
         //  console.log("can set Parent");
 
     }
@@ -842,18 +971,29 @@ enGeno.prototype.addNode = function (data) {
             a: [B, H]
         };
     }
+    this.array.push(data);
+    this.pushObjInOriginalArray(data);
     this.diagram.model.addNodeData(data);
     part = this.diagram.findPartForData(data);
-   // part.location = this.diagram.toolManager.contextMenuTool.mouseDownPoint;
+    // part.location = this.diagram.toolManager.contextMenuTool.mouseDownPoint;
     this.diagram.commitTransaction('new node');
-   this.load();
+
+    this.setupDiagram();
+
 }
 
 
+
+/*111
 //ตรวจว่าเป็นผญไหม-หาเส้นโยงคู่-เจอเส้นที่โยงแต่งงาน-เจอคีย์ผู้ชาย-ได้เส้นออกมา-เอาเส้นมาเพิ่มโหนด
 enGeno.prototype.addChild = function (node, gender, data) {
 
     // take a button panel in an Adornment, get its Adornment, and then get its adorned Node
+
+    //find node form key 
+    var arrCou = this.findMarriageArray(node.data.key);
+    
+
 
     var newnode = {
         n: "newNode"
@@ -886,34 +1026,35 @@ enGeno.prototype.addChild = function (node, gender, data) {
         for (var n = 0; n < arrNode.length; n++) {
             console.log("node out of " + node.data.key + " is : " + arrNode[n]);
             isMarried = this.findMarriage(arrNode[n], node.data.key);
-           // alert(isMarried.data.category);
-            if(isMarried){
-            keyCou = arrNode[n];
-            break;
+            // alert(isMarried.data.category);
+            if (isMarried) {
+                keyCou = arrNode[n];
+                break;
             }
         }
 
         console.log("Don't have Married")
-        if(isMarried == null){
-        var keyInto = [];
-        node.findNodesInto().each(function (n) {
-            keyInto.push(n.data.key);
-        });
-        //  var keyCou = keyInto[0].split(',');
-        for (var i = 0; i < keyInto.length; i++) {
+        if (isMarried == null) {
+            var keyInto = [];
+            node.findNodesInto().each(function (n) {
+                keyInto.push(n.data.key);
+            });
+            //  var keyCou = keyInto[0].split(',');
+            for (var i = 0; i < keyInto.length; i++) {
 
-            isMarried = this.findMarriage(keyInto[i], node.data.key);
-            if (isMarried !== null) break;
+                isMarried = this.findMarriage(keyInto[i], node.data.key);
+                if (isMarried !== null) break;
+
+            }
+            // var keyCou = keyInto[0];
+            //  keyCou = keyCou[0];
+            //  isMarried = this.findMarriage(keyCou, node.data.key);
+            //alert(isMarried.data.category + " with :" + keyCou);
+            //keyCou = n.data.key;
 
         }
-        // var keyCou = keyInto[0];
-        //  keyCou = keyCou[0];
-        //  isMarried = this.findMarriage(keyCou, node.data.key);
-        //alert(isMarried.data.category + " with :" + keyCou);
-        //keyCou = n.data.key;
         if (isMarried == null) {
             this.addSpouse(node);
-        }
         }
     }
     if (node.data.s == "F") {
@@ -930,9 +1071,6 @@ enGeno.prototype.addChild = function (node, gender, data) {
         }
     }
 
-    // we are modifying the model, so conduct a transaction
-
-    this.diagram.startTransaction("add node and link");
     // have the Model add the node data
     if (data != 'undefine') {
         for (var prop in data) {
@@ -942,6 +1080,12 @@ enGeno.prototype.addChild = function (node, gender, data) {
         }
     }
 
+    this.array.push(data);
+    this.pushObjInOriginalArray(data);
+    this.setupDiagram();
+
+    /*1
+    this.diagram.startTransaction("add node and link");
     this.diagram.model.addNodeData(newnode);
     var mdata = isMarried.data;
     var mlabkey = mdata.labelKeys[0];
@@ -949,14 +1093,78 @@ enGeno.prototype.addChild = function (node, gender, data) {
         from: mlabkey,
         to: newnode.key
     };
-    // and then add a link data connecting the original node with the new one
-    // var newlink = { from: node.data.key, to: newnode.key };
 
     this.diagram.model.addLinkData(cdata);
-    //   myDiagram.model.addLinkData(newlink);
-    // finish the transaction
     this.diagram.commitTransaction("add node and link");
+    1*/
+
+
+
+//}
+
+enGeno.prototype.addChild = function (node, gender, data,couKey) {
+
+    // take a button panel in an Adornment, get its Adornment, and then get its adorned Node
+    
+
+    //find node form key 
+    var arrCou = this.findMarriageArray(node.data.key);
+    var keyCou;
+    if(couKey &&this.haveKey(couKey)){
+        keyCou = couKey;
+    }
+    else if(arrCou.length>0 && !couKey){
+        keyCou =arrCou[0];
+    }
+    else if(arrCou.length<=0){
+        keyCou = this.addSpouse(node);
+    }
+
+
+    var newnode = {
+        n: "newNode"
+    };
+    if (gender == "M" || gender == "m")
+        newnode = {
+            n: "newNode",
+            s: "M"
+        };
+    else if (gender == "F" || gender == "f")
+        newnode = {
+            n: "newNode",
+            s: "F"
+        };
+    
+    
+    if (node.data.s == "F") {
+            newnode["m"] = node.data.key;
+            newnode["f"] = keyCou;
+
+    } else if (node.data.s == "M") {
+            newnode["f"] = node.data.key;
+            newnode["m"] = keyCou;
+
+    }
+
+    // have the Model add the node data
+    if (data != 'undefine') {
+        for (var prop in data) {
+            if (data.hasOwnProperty(prop)) {
+                newnode[prop] = data[prop];
+            }
+        }
+    }
+
+    this.pushObjInOriginalArray(newnode);
+    this.setupDiagram();
+
+
+
+
 }
+
+
+
 
 enGeno.prototype.addSon = function (node, data) {
     this.addChild(node, "M", data);
@@ -967,13 +1175,19 @@ enGeno.prototype.addDaughter = function (node, data) {
 }
 
 enGeno.prototype.addSpouse = function (node, data) {
-
+    
+    
+    
     // var node = b.part.adornedPart;
     var data = data;
-
+    var key = this.genKey();
+    if (data != null) {
+        newnode = data;
+    }
     var newnode = {
+        "key": key,
         n: "Spouse",
-        cou: node.key
+        cou: node.data.key
     };
     if (node.data.s == "M" || node.s == "m") {
 
@@ -984,13 +1198,15 @@ enGeno.prototype.addSpouse = function (node, data) {
         newnode.s = "M";
 
     }
-    if (data != null) {
-        newnode = data;
-    }
+    this.addSpouseArray(node.data.key, key);
+    this.pushObjInOriginalArray(newnode);
+
     this.diagram.startTransaction("add Spouse");
-    this.diagram.model.addNodeData(newnode);
+    this.diagram.model.addNodeData(this.copyJson(newnode));
 
     this.diagram.commitTransaction("add Spouse");
+
+
 
     /*
     //add new node to cou of this node
@@ -1004,10 +1220,14 @@ enGeno.prototype.addSpouse = function (node, data) {
     }
     */
 
-    this.setupMarriages();
-    this.setupParents();
-    console.log("Add Node Spouse");
 
+    this.setupDiagram();
+    //t this.setupMarriages();
+    //t   this.setupParents();
+    console.log("Add Node Spouse");
+    return key;
+
+    /*t
     var newKey = this.diagram.findNodeForData(newnode).data.key;
     console.log("newKey : " + newKey);
 
@@ -1022,7 +1242,7 @@ enGeno.prototype.addSpouse = function (node, data) {
         category: "Marriage"
     };
     this.diagram.model.addLinkData(mdata);
-
+                           
     //  var cdata = { from: node.data.key, to: newKey, labelKeys: [mlab.key], category: "Marriage",s: "LinkLabel" };
     //  this.diagram.model.addLinkData(cdata);
     this.diagram.commitTransaction("add Spouse and Marriage");
@@ -1033,13 +1253,13 @@ enGeno.prototype.addSpouse = function (node, data) {
     if (marrLink) {
         console.log(marrLink.data.category);
     }
-
-
+    
+   */
 }
 
 enGeno.prototype.getSelectedNode = function () {
 
-  //  console.log("number : " + this.diagram.selection.count);
+    //  console.log("number : " + this.diagram.selection.count);
 
     //return Array of Node
     var part = this.diagram.selection.iterator;
@@ -1049,8 +1269,8 @@ enGeno.prototype.getSelectedNode = function () {
     while (part.next()) {
         //print Node
         var node = part.value;
-      //  console.log("Key: " + node.data.key + ", Name : " + node.data.n);
-      // var newnode = this.setFormatNode(node);
+        //  console.log("Key: " + node.data.key + ", Name : " + node.data.n);
+        // var newnode = this.setFormatNode(node);
         arrNode.push(node);
         // this.selectedNodes.push(node);
 
@@ -1100,59 +1320,121 @@ enGeno.prototype.reRankAttr = function (a) {
 
 //**************** Filter ********************
 enGeno.prototype.filter = function (str) {
-        var model = this.diagram.model;
+    var model = this.diagram.model;
 
-        this.diagram.startTransaction("changed color");
-        //for each Node in diagram
+    this.diagram.startTransaction("changed color");
+    //for each Node in diagram
 
-        for (var i = 0; i < model.nodeDataArray.length; i++) {
-            var data = model.nodeDataArray[i];
-            if (data.a) { //if has attribite a 
-                for (var j = 0; j < data.a.length; j++) {
-                    var a = data.a[j].attr; //for each attribute of Node 
-                    var has;
-                    for (var k = 0; k < str.length; k++) {
-                        if (a == str[k]) {
-                            has = true;
-                            break;
-                        } else has = false;
-                    }
-                    if (has || !str) { //if same mean user want to see this attribute
-                        model.setDataProperty(data.a[j], "show", true);
-                    } else {
-                        model.setDataProperty(data.a[j], "show", false);
-                    }
+    for (var i = 0; i < model.nodeDataArray.length; i++) {
+        var data = model.nodeDataArray[i];
+        if (data.aobj) { //if has attribute a 
+            for (var j = 0; j < data.a.length; j++) {
+                var a = data.aobj[j].attr; //for each attribute of Node 
+                var has;
+                for (var k = 0; k < str.length; k++) {
+                    if (a == str[k]) {
+                        has = true;
+                        break;
+                    } else has = false;
+                }
+                if (has || !str) { //if same mean user want to see this attribute
+                    model.setDataProperty(data.aobj[j], "show", true);
+                } else {
+                    model.setDataProperty(data.aobj[j], "show", false);
                 }
             }
         }
-        this.diagram.commitTransaction("changed color");
-        console.log(JSON.stringify(model.nodeDataArray));
-
     }
-  
+    this.diagram.commitTransaction("changed color");
+    console.log(JSON.stringify(model.nodeDataArray));
 
-enGeno.prototype.setFormatNode = function (node){
-    var newNode = new Object;
-Object.assign(newNode, node);
-
-    var newNode =  Object.create(node.data);
-    console.log(JSON.stringify(newNode));
-        if(newNode.a){
-            var tempA = newNode.a;
-            var str= "";
-            for(var i =0;i<tempA.length;i++){
-                str += tempA[i].attr;
-            }
-            newNode.a = str;
-             console.log(JSON.stringify(node.data));
-        }
-    return newNode;
-   
 }
 
 
-//********** load function******************
+enGeno.prototype.setFormatNode = function (node) {
+    var newNode = new Object;
+    Object.assign(newNode, node);
 
+    var newNode = Object.create(node.data);
+    console.log(JSON.stringify(newNode));
+    if (newNode.a) {
+        var tempA = newNode.a;
+        var str = "";
+        for (var i = 0; i < tempA.length; i++) {
+            str += tempA[i].attr;
+        }
+        newNode.a = str;
+        console.log(JSON.stringify(node.data));
+    }
+    return newNode;
+
+}
+
+
+enGeno.prototype.genKey = function () {
+    var arr = this.getOriginalArray();
+    console.log(arr.length);
+    var key = 0;
+    var can = false;
+    while (!can) {
+        can = true;
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i].key == key) {
+                can = false;
+                key++;
+            }
+        }
+
+    }
+
+    return key;
+}
+
+enGeno.prototype.copyJson = function (data) {
+    return JSON.parse(JSON.stringify(data));
+}
+
+//********** load function******************
+enGeno.prototype.load = function () {
+    var JsonData = [
+        {
+            key: 1,
+            n: "Eve",
+            s: "M",
+            m: 2,
+            a: "BHS"
+    }, {
+            key: 5,
+            n: "eve2",
+            s: "M",
+            m: 2,
+            a: "BHS"
+    },
+        {
+            key: 2,
+            n: 'Mom',
+            s: 'F',
+            cou: 3,
+            a: "CGK"
+    },
+        {
+            key: 3,
+            n: "Dad",
+            s: 'M',
+            a: "AELS"
+    },
+        {
+            key: 4,
+            n: "Ever",
+            s: "F",
+            m: 2,
+            f: 3,
+            a: "BH"
+    }
+];
+    this.setOriginalArray(JsonData);
+    this.setupDiagram();
+}
 
 //************** Open Form File ***************
 

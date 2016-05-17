@@ -226,7 +226,17 @@ else{
       <div class="form" id="infoForm">
          
         <h2 style="">ข้อมูลสมาชิกครอบครัว</h2>
-        <img src="img/mockup/node.PNG" style="margin-left:50px;">
+        
+        
+        <div  style=" position: relative; margin-left:50px; width:150px; height:150px; ">
+            
+            <div id="attrimg1" style=" width:75px; height:75px; float:left "></div>
+            <div id="attrimg2" style=" width:75px; height:75px; float:left "></div>
+            <div id="attrimg3" style=" width:75px; height:75px; float:left "></div>
+            <div id="attrimg4" style=" width:75px; height:75px; float:left "></div>
+            
+            <img src="img/femalenode.png" id="nodeimg" style="position: absolute; top:0px; left:0px;">
+        </div>
         <form >
          <h3>ชื่อ : .....<span id="nameText" > </span>.... </h3>
          <h3>เพศ : .....<span id="genderText" > </span>.... </h3>
