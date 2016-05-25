@@ -179,6 +179,17 @@ else{
                         </div>       
                         </ul>
                     </li>
+                    
+                    <li class='has-sub'><a href='#'>ค้นหา</a>
+                        <ul>
+                           <div style="text-align:center" >
+                           <input type="text" id="keyword" name="keyword" >
+                           <input type="button" onclick="search()" value="ค้นหา" >
+                           <input type="button" onclick="testHighlight()" value="Highlight" >
+                        </div>       
+                        </ul>
+                    </li>
+                    
                 </ul>
             </div>
             

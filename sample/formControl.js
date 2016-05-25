@@ -111,14 +111,14 @@ function clickNode(ctrl, node) {
 //this.myDiagram.addSpouse(node);
     
     //console.log(this.myDiagram.genKey());
-    
+   
     //addSon
-   this.myDiagram.addSon(node);
+   //this.myDiagram.addSon(node);
     //***********for open file ********
    
    //.myDiagram.addDaughter(node);
   //  this.myDiagram.load();
-console.log(this.myDiagram.findMarriageArray(node.data.key));
+//console.log(this.myDiagram.findMarriageArray(node.data.key));
    // var newNode = {key:23 ,m:22,f:21,s:'F',a:'ABC'};
   //  this.myDiagram.addNode(newNode);
   setInfoForm();
@@ -127,9 +127,19 @@ console.log(this.myDiagram.findMarriageArray(node.data.key));
 
 
 
+function search(){
+    var keyword = document.getElementById("keyword");
+     var arrResult = this.myDiagram.searchByKeyWord(keyword.value);
+    console.log("arrResult = "+arrResult.length);
+    
+}
+
+
+
 function clickDiagram() {
-    this.myDiagram.load();
-    setInfoForm();
+    this.myDiagram.setupRelationship();
+   // this.myDiagram.load();
+   // setInfoForm();
 }
 
 
@@ -173,6 +183,7 @@ function doubleClickNode(e, b) {
     
 
 }
+
 
 
 
@@ -367,6 +378,9 @@ function setInfoForm(){
     }
     
 }
+
+
+
 
 
 function setFilter(){
