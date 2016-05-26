@@ -8,10 +8,9 @@ var $ = go.GraphObject.make;
 // A custom layout that shows the two families related to a person's parents
 function GenogramLayout() {
     go.LayeredDigraphLayout.call(this);
-    this.initializeOption = go.LayeredDigraphLayout.InitDepthFirstOut;
+    this.initializeOption = go.LayeredDigraphLayout.InitDepthFirstIn;
 }
 go.Diagram.inherit(GenogramLayout, go.LayeredDigraphLayout);
-
 
 /** @override */
 GenogramLayout.prototype.makeNetwork = function (coll) {
@@ -185,7 +184,6 @@ GenogramLayout.prototype.findParentsMarriageLabelNode = function (node) {
 
 
 
-
 //------------------------------------API----------------------
 
 
@@ -201,25 +199,12 @@ var enGeno = class {
         //  this.setContextNode();
         var originArray = data;
 
-        this.setOriginalArray = function(ori) {
-
+        this.setOriginalArray = function (ori) {
             originArray = ori;
-            for (var i = 0; i < originArray.length; i++) {
-                if (originArray[i].m && typeof originArray[i].m == "string") originArray[i].m = parseInt(originArray[i].m);
-                if (originArray[i].f && typeof originArray[i].f == "string") {
-                    originArray[i].f = parseInt(originArray[i].f);
-                } else if (originArray[i].cou && typeof originArray[i].cou == "object") {
-                    for (var c = 0; c < originArray[i].cou.length; c++) {
-                        originArray[i].cou[c] = parseInt(originArray[i].cou[c]);
-                    }
-                }
-            }
-
-
         }
 
         this.pushObjInOriginalArray = function (obj) {
-            originArray.push(JSON.parse(JSON.stringify(obj)));
+            originArray.push(obj);
         }
         this.getOriginalArray = function () {
             var arr = JSON.parse(JSON.stringify(originArray));
@@ -227,7 +212,7 @@ var enGeno = class {
             return arr;
         }
 
-        this.setPropertyArray = function (key, pro, value) {
+        this.setProopotyArray = function (key, pro, value) {
             for (var i = 0; i < originArray.length; i++) {
                 if (originArray[i].key == key) {
                     originArray[i][pro] = value;
@@ -236,13 +221,10 @@ var enGeno = class {
         }
 
         this.addSpouseArray = function (key, value) {
-            
             for (var i = 0; i < originArray.length; i++) {
-                //หาkeyที่จะเพิ่มแฟน
                 if (originArray[i].key == key) {
-                    if (originArray[i].cou && typeof originArray[i].cou == "object") {
+                    if (typeof originArray[i].cou == "object") {
                         var can = true;
-                        //ตรวจว่ามี key ที่จะเพิ่มหรือยัง
                         for (var j = 0; j < originArray[i].cou.length; j++) {
                             if (key == originArray[i].cou[j]) {
                                 can = false;
@@ -253,7 +235,7 @@ var enGeno = class {
                         if (can) {
                             originArray[i].cou.push(value);
                         }
-                    } else if (originArray[i].cou && typeof originArray[i].cou == "number") {
+                    } else if (typeof originArray[i].cou == "number") {
                         var temp = originArray[i].cou;
                         originArray[i].cou = [temp, value];
 
@@ -262,8 +244,6 @@ var enGeno = class {
                     }
                 }
             }
-            console.log("addSpouseArray key="+key);
-            console.log("Now origin array = "+JSON.stringify(originArray));
         }
 
         this.deleteSpouseArray = function (key, value) {
@@ -326,36 +306,36 @@ var enGeno = class {
 
         // determine the color for each attribute shape
         function attrFill(a) {
-            if (a.show == true && a.attr) {
+            if (a.show == true) {
                 switch (a.attr) {
-                    case "A":
-                        return "#0000FE";
-                    case "B":
-                        return "#FF00FF";
-                    case "C":
-                        return "#FE0000";
-                    case "D":
-                        return "#C00000";
-                    case "E":
-                        return "#C00000";
-                    case "F":
-                        return "#FFC000";
-                    case "G":
-                        return "#01FF00";
-                    case "H":
-                        return "#800080";
-                    case "I":
-                        return "#939FBB";
-                    case "J":
-                        return "#01FFFF";
-                    case "K":
-                        return "#359AFF";
-                    case "L":
-                        return "#FFFF00";
-                    case "S":
-                        return "red";
-                    default:
-                        return "transparent";
+                case "A":
+                    return "#0000FE";
+                case "B":
+                    return "#FF00FF";
+                case "C":
+                    return "#FE0000";
+                case "D":
+                    return "#C00000";
+                case "E":
+                    return "#C00000";
+                case "F":
+                    return "#FFC000";
+                case "G":
+                    return "#01FF00";
+                case "H":
+                    return "#800080";
+                case "I":
+                    return "#939FBB";
+                case "J":
+                    return "#01FFFF";
+                case "K":
+                    return "#359AFF";
+                case "L":
+                    return "#FFFF00";
+                case "S":
+                    return "red";
+                default:
+                    return "transparent";
                 }
             } else {
                 return "transparent";
@@ -374,13 +354,11 @@ var enGeno = class {
 
         function maleGeometry(a) {
             //   console.log("attr : "+a[attr]+" ,index : "+a.index);
-            if (a.attr) {
-                if (a.attr == 'S') return slash;
-                if (a.index == 1) return tlsq;
-                else if (a.index == 2) return trsq;
-                else if (a.index == 3) return brsq;
-                else if (a.index == 4) return blsq;
-            }
+            if (a.attr == 'S') return slash;
+            if (a.index == 1) return tlsq;
+            else if (a.index == 2) return trsq;
+            else if (a.index == 3) return brsq;
+            else if (a.index == 4) return blsq;
 
 
 
@@ -401,13 +379,11 @@ var enGeno = class {
 
         function femaleGeometry(a) {
             //   console.log("attr : "+a[attr]+" ,index : "+a.index);
-            if (a.attr) {
-                if (a.attr == 'S') return slash;
-                if (a.index == 1) return tlarc;
-                else if (a.index == 2) return trarc;
-                else if (a.index == 3) return brarc;
-                else if (a.index == 4) return blarc;
-            }
+            if (a.attr == 'S') return slash;
+            if (a.index == 1) return tlarc;
+            else if (a.index == 2) return trarc;
+            else if (a.index == 3) return brarc;
+            else if (a.index == 4) return blarc;
 
 
 
@@ -415,26 +391,6 @@ var enGeno = class {
 
         }
 
-        function ageFill(a) {
-            if (a.show)
-                return "#FFFFFF";
-            else
-                return "transparent";
-        }
-
-        function ageText(a) {
-            if (a.year) {
-                return a.year;
-            }
-        }
-
-        function ageTextColor(a) {
-            if (a.show)
-                return "black";
-            else
-                return "transparent";
-
-        }
 
 
         // two different node templates, one for each sex,
@@ -474,30 +430,6 @@ var enGeno = class {
                             margin: 1
                         },
                         new go.Binding("itemArray", "aobj")
-                    ),
-
-
-                    $(go.Panel, {
-                            itemTemplate: $(go.Panel,
-                                $(go.Shape, "Circle", {
-                                    width: 20,
-                                    height: 20,
-                                    stroke: null,
-                                    strokeWidth: 0,
-                                    fill: "white"
-                                }, new go.Binding("fill", "", ageFill)),
-                                $(go.TextBlock, {
-                                        textAlign: "center",
-                                        maxSize: new go.Size(80, NaN),
-                                        position: new go.Point(3, 5)
-
-                                    },
-                                    new go.Binding("text", "", ageText),
-                                    new go.Binding("color", "", ageTextColor)
-                                )),
-                            position: new go.Point(10, 10)
-                        },
-                        new go.Binding("itemArray", "age")
                     )
                 ),
                 $(go.TextBlock, {
@@ -508,7 +440,6 @@ var enGeno = class {
 
 
             ));
-
 
         this.diagram.nodeTemplateMap.add("F", // female
             $(go.Node, "Vertical", {
@@ -544,30 +475,6 @@ var enGeno = class {
                             margin: 1
                         },
                         new go.Binding("itemArray", "aobj")
-                    ),
-
-
-                    $(go.Panel, {
-                            itemTemplate: $(go.Panel,
-                                $(go.Shape, "Circle", {
-                                    width: 20,
-                                    height: 20,
-                                    stroke: null,
-                                    strokeWidth: 0,
-                                    fill: "white"
-                                }, new go.Binding("fill", "", ageFill)),
-                                $(go.TextBlock, {
-                                        textAlign: "center",
-                                        maxSize: new go.Size(80, NaN),
-                                        position: new go.Point(3, 5)
-
-                                    },
-                                    new go.Binding("text", "", ageText),
-                                    new go.Binding("color", "", ageTextColor)
-                                )),
-                            position: new go.Point(10, 10)
-                        },
-                        new go.Binding("itemArray", "age")
                     )
                 ),
                 $(go.TextBlock, {
@@ -621,7 +528,7 @@ var enGeno = class {
                     strokeWidth: width,
                     strokeCap: cap
                 }));
-            //console.log('addPattern :' + name);
+            console.log('addPattern :' + name);
         }
 
         definePathPattern("Single", "M0 0 L1 0");
@@ -691,17 +598,17 @@ var enGeno = class {
 
         this.diagram.linkTemplateMap.add("relationship", // for marriage relationships
             $(go.Link, go.Link.Bezier, // slightly curved, by default
-                {
-                    isVisible: true,
+                {                    
+                    isVisible:true,
                     layerName: "Background",
                     routing: go.Link.Normal,
                 }, // users can reshape the link route
-
-                $(go.Shape, {
-                    geometryString: "M0 0 L1 0  1 3  0 3  M0 6 L4 6  4 0  8 0  M8 3 L7 3  7 6  8 6",
-                    fill: "transparent",
-                    stroke: "black"
-                })
+                
+                    $(go.Shape, {
+                        geometryString: "M0 0 L1 0  1 3  0 3  M0 6 L4 6  4 0  8 0  M8 3 L7 3  7 6  8 6",
+                        fill: "transparent",
+                        stroke: "black"
+                    })
                 /*
                   $(go.Shape, // the link's path shape
                       {
@@ -753,9 +660,8 @@ var enGeno = class {
 
 
     setupDiagram(focusId) {
-       
         var array = this.getOriginalArray();
-        console.log("setupDi originArray  = " + JSON.stringify(this.getOriginalArray()));
+        console.log("originArray  = " + JSON.stringify(this.getOriginalArray()));
 
         //********** change object ***********
 
@@ -784,29 +690,9 @@ var enGeno = class {
 
                 }
             }
-
-            if (array[i].age) {
-                var a = {
-                    year: array[i].age,
-                    show: true
-                };
-                array[i].age = [a];
-            }
-
-            //key must be integer
-            if (newdata[i].m && typeof newdata[i].m == "string") array[i].m = parseInt(newdata[i].m);
-            if (newdata[i].f && typeof newdata[i].m == "string") array[i].f = parseInt(newdata[i].f);
-            if (newdata[i].cou && typeof newdata[i].cou == "string") {
-                array[i].cou = parseInt(newdata[i].cou);
-            } else if (newdata[i].cou && typeof newdata[i].cou == "object") {
-                for (var c = 0; c < newdata[i].cou.length; c++) {
-                    array[i].cou[c] = parseInt(newdata[i].cou[c]);
-                }
-            }
         }
 
-      //  console.log(JSON.stringify(newdata));
-       // console.log(array[1].n);
+        console.log(array[1].n);
         this.diagram.model =
             go.GraphObject.make(go.GraphLinksModel, { // declare support for link label nodes
                 linkLabelKeysProperty: "labelKeys",
@@ -816,8 +702,7 @@ var enGeno = class {
                 nodeDataArray: array
             });
 
-console.log("Arter setupDi originArray  = " + JSON.stringify(this.getOriginalArray()));
-        
+
 
 
         var node = this.diagram.findNodeForKey(focusId);
@@ -869,58 +754,55 @@ console.log("Arter setupDi originArray  = " + JSON.stringify(this.getOriginalArr
         return null;
     }
 
-
-
+    //เหลือเช็คอาเรย์มันแอดเลขซ้ำค่า
     findMarriageArray(key) {
 
 
-        console.log("Key to find = "+key);
+
         var arr = this.getOriginalArray();
         var arrCou = [];
 
         function hasNum(num) {
             for (var i = 0; i < arrCou.length; i++) {
-                if (arrCou[i] == num && num != key)
+                if (arrCou[i] == num)
                     return true;
             }
             return false;
         }
-
         //for everynode
         for (var i = 0; i < arr.length; i++) {
             //keyตัวเอง มี cou
             if (arr[i].key == key && arr[i].cou) {
-                if (typeof arr[i].cou == "number"||typeof arr[i].cou == "string") {
-
+                if (typeof arr[i].cou == "object") {
+                    for (var j = 0; j < arr[i].cou.length; j++) {
+                        if (!hasNum(arr[i].cou[j])) {
+                            arrCou.push(arr[i].cou[j]);
+                            console.log("1.arr[i].key == key && arr[i].cou--" + arr[i].cou[j]);
+                        }
+                    }
+                } else if (typeof arr[i].cou == 'number')
                     if (!hasNum(arr[i].cou)) {
-                        arrCou.push(parseInt(arr[i].cou));
-                        console.log("in my key");
-                        console.log("arrCou = " + arrCou[0]);
+                        arrCou.push(arr[i].cou);
+                        console.log("2.typeof arr[i].cou ==number--" + arr[i].cou);
                     }
-                } else if (typeof arr[i].cou == "object") {
-                    for (var j = 0; j < arr[i].cou.length; j++) {
-                        if (!hasNum(arr[i].cou[j])) arrCou.push(parseInt(arr[i].cou[j]));
+            } else if (arr[i].cou && typeof arr[i].cou == 'object') {
+                for (var j = 0; j < arr[i].length; j++) {
+                    //marry formanother node
+                    if (arr[i].cou[j] == key) {
+                        if (!hasNum(arr[i].key)) {
+                            arrCou.push(arr[i].key);
+                            console.log("3.arr[i].cou[j] == key--" + arr[i].key);
+                        }
                     }
                 }
+            } else if (arr[i].cou && typeof arr[i].cou == 'number' && arr[i].cou == key) {
+                if (!hasNum(arr[i].key)) {
+                    arrCou.push(arr[i].key);
+                    console.log("4.arr[i].cou && typeof arr[i].cou =='number' && arr[i].cou == key-" + arr[i].key);
+                }
+            }
 
-                console.log(typeof arr[i].cou);
-            }
-            //โหลดอื่นที่มี cou
-            else if (arr[i].cou) {
-                if (arr[i].cou == key && (typeof arr[i].cou == "number"||typeof arr[i].cou == "string")) {
-                    if (!hasNum(arr[i].key)) arrCou.push(arr[i].key);
-                } else if (typeof arr[i].cou == "object") {
-                    for (var j = 0; j < arr[i].cou.length; j++) {
-                        if (arr[i].cou[j] == key) {
-                            if (!hasNum(arr[i].key)) arrCou.push(parseInt(arr[i].key))
-                        };
-                    }
-                }
-            }
         }
-        for (var i = 0; i < arrCou.length; i++) {
-               arrCou[i] = parseInt(arrCou[i]);
-            }
         return arrCou;
     }
 
@@ -934,12 +816,10 @@ console.log("Arter setupDi originArray  = " + JSON.stringify(this.getOriginalArr
             var data = nodeDataArray[i];
             var key = data.key; //เก็บคีย์โหนดไว้
             var uxs = data.cou; //เก็บคีย์แฟนเอาไว้
-        //    console.log('key :' + key + " uxs" + uxs);
             if (uxs !== undefined) { //ถ้ามีคีย์แฟน
                 if (typeof uxs === "number") uxs = [uxs]; // และคีย์แฟนเป็นเลข ก็ให้เก็บเข้า array
                 for (var j = 0; j < uxs.length; j++) { //วนสำหรับแฟนทุกคน
                     var wife = uxs[j]; // เอาคีย์แฟนแต่ละคนใช้ในชื่อของตัวแปล wife
-
                     if (key === wife) { //ถ้า set เป็นแฟนกับตัวเองให้ไม่ต้องทำไร
                         // or warn no reflexive marriages
                         continue;
@@ -958,7 +838,6 @@ console.log("Arter setupDi originArray  = " + JSON.stringify(this.getOriginalArr
                             labelKeys: [mlab.key], //label ว่ามันจะไปอยู่ชั้นไหนดี
                             category: "Marriage"
                         };
-                 //       console.log('marry: ' + key + " and " + wife);
                         model.addLinkData(mdata);
 
                     }
@@ -1111,8 +990,6 @@ enGeno.prototype.addChild = function (node, gender, data, couKey) {
 
     //find node form key 
     var arrCou = this.findMarriageArray(node.data.key);
-    console.log("arrCou[0]1111111111111111111");
-    console.log(arrCou[0]);
     var keyCou;
     if (couKey && this.haveKey(couKey)) {
         keyCou = couKey;
@@ -1124,13 +1001,18 @@ enGeno.prototype.addChild = function (node, gender, data, couKey) {
 
 
     var newnode = {
-        key:this.genKey(),
         n: "newNode"
     };
     if (gender == "M" || gender == "m")
-        newnode["s"] = "M";
+        newnode = {
+            n: "newNode",
+            s: "M"
+        };
     else if (gender == "F" || gender == "f")
-        newnode["s"] = "F";
+        newnode = {
+            n: "newNode",
+            s: "F"
+        };
 
 
     if (node.data.s == "F") {
@@ -1173,7 +1055,7 @@ enGeno.prototype.addDaughter = function (node, data) {
 
 enGeno.prototype.addSpouse = function (node, data) {
 
- console.log("Before origin array = "+JSON.stringify(this.getOriginalArray()));
+
 
     // var node = b.part.adornedPart;
     var data = data;
@@ -1195,13 +1077,13 @@ enGeno.prototype.addSpouse = function (node, data) {
         newnode.s = "M";
 
     }
-    this.addSpouseArray(this.copyJson(node.data.key), key);
+    this.addSpouseArray(node.data.key, key);
     this.pushObjInOriginalArray(newnode);
 
-    //this.diagram.startTransaction("add Spouse");
- //   this.diagram.model.addNodeData(this.copyJson(newnode));
+    this.diagram.startTransaction("add Spouse");
+    this.diagram.model.addNodeData(this.copyJson(newnode));
 
-   // this.diagram.commitTransaction("add Spouse");
+    this.diagram.commitTransaction("add Spouse");
 
 
 
@@ -1376,42 +1258,11 @@ enGeno.prototype.searchByKeyWord = function (keyword) {
         return arrResult;
     }
     //********** make img****************
-enGeno.prototype.makeImage = function (para1, para2) {
-    var imgDiv = document.getElementById('imgdiv');
-    var db = this.diagram.documentBounds.copy();
-    var boundswidth = db.width;
-    var boundsheight = db.height;
-    if (!para1 && !para2) {
-        var img = this.diagram.makeImage({
-            scale: 1,
-            type: "image/png",
-            size: new go.Size(boundswidth + 100, boundsheight + 100),
-            background: "transparent"
-        });
-        console.log('in 1');
-    } else if (para1 && !para2) {
-        var scale = para1;
-        var img = this.diagram.makeImage({
-            scale: scale,
-            type: "image/jpg",
-            size: new go.Size(boundswidth * scale + 100, boundsheight * scale + 100),
-            background: "white"
-        });
-    } else {
-        var scale1 = para1 / boundswidth;
-        var scale2 = para2 / boundsheight;
-        var img = this.diagram.makeImage({
-            scale: (scale1 < scale2) ? scale1 : scale2,
-            type: "image/jpeg",
-            size: new go.Size(para1 + 100, para2 + 100),
-            background: "white"
-        });
-        console.log('in 2');
-    }
-
-    // img.className  = "images";
-
-    imgDiv.appendChild(img);
+enGeno.prototype.makeImage = function () {
+    this.diagram.makeImage({
+        scale: 1,
+        type: "image/jpeg"
+    });
 }
 
 
@@ -1494,12 +1345,7 @@ enGeno.prototype.setupRelationship = function () {
     };
     model.addLinkData(mdata);
 
-    var it = this.diagram.nodeDataArray;
-    while (it.next()) {
-        if (it.value instanceof go.Node) {
-            console.log(it.value.data.position);
-        }
-    }
+
 
 
 

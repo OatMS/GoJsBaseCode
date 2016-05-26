@@ -107,7 +107,7 @@ else{
 
    
    <body id="bodyindex" onload="<?
-                                if($_GET['startType']=="import") echo "fakeData();";
+                                if($_GET['startType']=="import") echo "genGramFormFile();";
                                 else echo "setdata();";
          
          ?>" >
@@ -308,6 +308,7 @@ else{
     </div>
     
     
+    <div id='imgdiv'></div>
     
     <menu id="ctxMenu">
     <menu title="File">
@@ -352,8 +353,8 @@ else{
     
     function fakeData(){
         var data = [
-    { key: 0, n: "Aaron", s: "M", m:-10, f:-11, cou: 1, a: ["C", "F", "K"] },
-    { key: 1, n: "Alice", s: "F", m:-12, f:-13, a: ["B", "H", "K"] },
+    { key: 0, n: "Aaron", s: "M",  cou: 1, a: ["C", "F", "K"],age:20},
+    { key: 1, n: "Alice", s: "F",  a: ["B", "H", "K"] ,age:45},
     { key: 2, n: "Bob", s: "M", m: 1, f: 0, cou: 3, a: ["C", "H", "L"] },
     { key: 3, n: "Barbara", s: "F", a: ["C"] },
     { key: 4, n: "Bill", s: "M", m: 1, f: 0, cou: 5, a: ["E", "H"] },
@@ -369,8 +370,8 @@ else{
     { key: 14, n: "Emma", s: "F", m: 5, f: 4, a: ["E", "G"] },
     { key: 15, n: "Evan", s: "M", m: 8, f: 9, a: ["F", "H"] },
     { key: 16, n: "Ethan", s: "M", m: 8, f: 9, a: ["D", "K", "S"] },
-    { key: 17, n: "Eve", s: "F", cou: 16, a: ["B", "F", "L", "S"] },
-    { key: 18, n: "Emily", s: "F", m: 8, f: 9 },
+    { key: 17, n: "Eve", s: "F", cou: 16, a: ["B", "F", "L", "S"],age:12 },
+    { key: 18, n: "Emily", s: "F", m: 8, f: 9,age:56 },
     { key: 19, n: "Fred", s: "M", m: 17, f: 16, a: ["B"] },
     { key: 20, n: "Faith", s: "F", m: 17, f: 16, a: ["L"] },
     { key: 21, n: "Felicia", s: "F", m: 12, f: 13, a: ["H"] },
