@@ -199,27 +199,29 @@ var enGeno = class {
         var contextNode;
         var nodeOnRightClicked;
         //  this.setContextNode();
-        var originArray = data;
+        var originArray = setOriginalArray(data);
 
-        this.setOriginalArray = function(ori) {
+        function setOriginalArray(data) {
 
-            originArray = ori;
-            for (var i = 0; i < originArray.length; i++) {
-                if (originArray[i].m && typeof originArray[i].m == "string") originArray[i].m = parseInt(originArray[i].m);
-                if (originArray[i].f && typeof originArray[i].f == "string") {
-                    originArray[i].f = parseInt(originArray[i].f);
-                } else if (originArray[i].cou && typeof originArray[i].cou == "object") {
-                    for (var c = 0; c < originArray[i].cou.length; c++) {
-                        originArray[i].cou[c] = parseInt(originArray[i].cou[c]);
+            originArray = [];
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].m && typeof data[i].m == "string") data[i].m = parseInt(data[i].m);
+                if (data[i].f && typeof data[i].f == "string") {
+                    data[i].f = parseInt(data[i].f);
+                } else if (data[i].cou && typeof data[i].cou == "object") {
+                    for (var c = 0; c < data[i].cou.length; c++) {
+                        data[i].cou[c] = parseInt(data[i].cou[c]);
                     }
                 }
-            }
 
+                originArray[""+data[i].key] = JSON.parse(JSON.stringify(data[i]));
+            }
+            return originArray;
 
         }
 
         this.pushObjInOriginalArray = function (obj) {
-            originArray.push(JSON.parse(JSON.stringify(obj)));
+            originArray[""+obj.key]=JSON.parse(JSON.stringify(obj)));
         }
         this.getOriginalArray = function () {
             var arr = JSON.parse(JSON.stringify(originArray));
@@ -236,52 +238,33 @@ var enGeno = class {
         }
 
         this.addSpouseArray = function (key, value) {
-            
-            for (var i = 0; i < originArray.length; i++) {
+
                 //หาkeyที่จะเพิ่มแฟน
-                if (originArray[i].key == key) {
-                    if (originArray[i].cou && typeof originArray[i].cou == "object") {
+                    if (originArray[""+key].cou && typeof originArray[i].cou == "object") {
                         var can = true;
                         //ตรวจว่ามี key ที่จะเพิ่มหรือยัง
-                        for (var j = 0; j < originArray[i].cou.length; j++) {
-                            if (key == originArray[i].cou[j]) {
+                        for (var j = 0; j < originArray[""+key].cou.length; j++) {
+                            if (key == originArray[""+key].cou[j]) {
                                 can = false;
                                 break;
                             }
 
                         }
                         if (can) {
-                            originArray[i].cou.push(value);
+                            originArray[""+key].cou.push(value);
                         }
-                    } else if (originArray[i].cou && typeof originArray[i].cou == "number") {
-                        var temp = originArray[i].cou;
-                        originArray[i].cou = [temp, value];
+                    } else if (originArray[""+key].cou && typeof originArray[""+key].cou == "number") {
+                        var temp = originArray[""+key].cou;
+                        originArray[""+key].cou = [temp, value];
 
                     } else {
-                        originArray[i].cou = value;
+                        originArray[""+key].cou = value;
                     }
-                }
-            }
             console.log("addSpouseArray key="+key);
             console.log("Now origin array = "+JSON.stringify(originArray));
         }
 
-        this.deleteSpouseArray = function (key, value) {
-            for (var i = 0; i < originArray.length; i++) {
-                if (originArray[i].key == key) {
-                    if (typeof originArray[i].cou == "object") {
 
-                        var index = originArray[i].cou.indexOf(value);
-                        if (index > -1) {
-                            array.splice(index, 1);
-                        } else if (typeof originArray[i].cou == "number") {
-                            originArray[i].cou = '';
-
-                        }
-                    }
-                }
-            }
-        }
 
 
 
@@ -380,6 +363,7 @@ var enGeno = class {
                 else if (a.index == 2) return trsq;
                 else if (a.index == 3) return brsq;
                 else if (a.index == 4) return blsq;
+                else return null;
             }
 
 
@@ -753,7 +737,6 @@ var enGeno = class {
 
 
     setupDiagram(focusId) {
-       
         var array = this.getOriginalArray();
         console.log("setupDi originArray  = " + JSON.stringify(this.getOriginalArray()));
 
@@ -817,7 +800,7 @@ var enGeno = class {
             });
 
 console.log("Arter setupDi originArray  = " + JSON.stringify(this.getOriginalArray()));
-        
+
 
 
         var node = this.diagram.findNodeForKey(focusId);
@@ -1006,6 +989,8 @@ console.log("Arter setupDi originArray  = " + JSON.stringify(this.getOriginalArr
 
 
 
+
+
     init() {
         this.setupDiagram(1);
     };
@@ -1109,7 +1094,7 @@ enGeno.prototype.addChild = function (node, gender, data, couKey) {
     // take a button panel in an Adornment, get its Adornment, and then get its adorned Node
 
 
-    //find node form key 
+    //find node form key
     var arrCou = this.findMarriageArray(node.data.key);
     console.log("arrCou[0]1111111111111111111");
     console.log(arrCou[0]);
@@ -1283,9 +1268,9 @@ enGeno.prototype.filter = function (str) {
 
     for (var i = 0; i < model.nodeDataArray.length; i++) {
         var data = model.nodeDataArray[i];
-        if (data.aobj) { //if has attribute a 
+        if (data.aobj) { //if has attribute a
             for (var j = 0; j < data.a.length; j++) {
-                var a = data.aobj[j].attr; //for each attribute of Node 
+                var a = data.aobj[j].attr; //for each attribute of Node
                 var has;
                 for (var k = 0; k < str.length; k++) {
                     if (a == str[k]) {
@@ -1475,7 +1460,7 @@ enGeno.prototype.setupRelationship = function () {
         model.addLinkData({ from: 1, to:5, patt: patt2a, patt2: patt2b, toArrow: arrow });
 
         if (patt3a) {
-          
+
           model.addLinkData({ from: 1, to: 5, patt: patt3a, patt2: patt3b, toArrow: arrow });
         }
       }
@@ -1522,24 +1507,24 @@ enGeno.prototype.setupRelationship = function () {
 function openFile(event) {
     var data=[];
    var text;
-  
+
     var input = event.target[0];
     alert(input);
     var data=[];
-    
+
     var reader = new FileReader();
     reader.onload = function(){
       var text = reader.result;
       var lines = text.split("\r\n");
-       
+
     for(var line = 0; line < lines.length; line++){
-        
+
      data.push(readByLine(lines[line]));
-       
+
     }
          //alert(JSON.stringify(data));
         init(data);
-    
+
     function readByLine(line){
         var attribute = line.split(',');
         var obj ={};
@@ -1547,25 +1532,25 @@ function openFile(event) {
             var buddle = attribute[item].split(':');
             var key = buddle[0];
             var value = buddle[1]
-            
+
             //if Attribute a
             if(key == 'a'){
                 value = value.split('');
             }
-            
+
             obj[key] = value;
         }
         return obj;
-    
+
     }
-                                                                    
-        
+
+
     };
     reader.readAsText(input.files[0]);
-    
-    
+
+
     return data;
-    
+
   };
 */
 //*************************

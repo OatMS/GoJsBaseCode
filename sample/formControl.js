@@ -104,20 +104,22 @@ function clickNode(ctrl, node) {
 
   //  var node = this.myDiagram.getSelectedNode();
    // console.log(node[0].data.key);
-    
-    
+
+
     //this.myDiagram.filter("AB");
-    
+
 //this.myDiagram.addSpouse(node);
-    
+
     //console.log(this.myDiagram.genKey());
-    
+
   //  var arrCou = this.myDiagram.findMarriageArray(node.data.key); //console.log(JSON.stringify(arrCou));
-   
+
     //addSon
-  this.myDiagram.addSon(node);
+ //this.myDiagram.addSon(node);
     //***********for open file ********
-   
+    var aaa = this.myDiagram.getOriginalArray();
+    console.log(JSON.stringify(aaa["5"]));
+
    //.myDiagram.addDaughter(node);
   //  this.myDiagram.load();
 console.log(this.myDiagram.findMarriageArray(node.data.key));
@@ -133,7 +135,7 @@ function search(){
     var keyword = document.getElementById("keyword");
      var arrResult = this.myDiagram.searchByKeyWord(keyword.value);
     console.log("arrResult = "+arrResult.length);
-    
+
 }
 
 
@@ -170,20 +172,20 @@ function doubleClickNode(e, b) {
     //test changNode
     /*
     var nodeFound = myDiagram.findNode(1);
-    if (nodeFound != 
+    if (nodeFound !=
     'undefine') {
     myDiagram.changeNodeData(nodeFound, {
             key: 8,
             n: "HELLO",
             s: "F"
         });
-    } 
+    }
     else {
-         console.log("cannot find node");   
+         console.log("cannot find node");
     }
     */
   // this.myDiagram.addSon(node);
-    
+
 
 }
 
@@ -256,7 +258,7 @@ function setInfoForm(){
     var diseases = document.getElementById("diseases");
     var attr = document.getElementById("attr");
     var  nodeimg = document.getElementById("nodeimg");
-    
+
     var  attrimg1 = document.getElementById("attrimg1");
     var  attrimg2 = document.getElementById("attrimg2");
     var  attrimg3 = document.getElementById("attrimg3");
@@ -267,10 +269,10 @@ function setInfoForm(){
     for(var i=0;i<4;i++){
         attrimg[i].style.backgroundColor = "#FFFFFF";
     }
-    
-    
+
+
     function attrFill(a) {
-           
+
                 switch (a.attr) {
                     case "A":
                         return "#0000FE";
@@ -302,11 +304,11 @@ function setInfoForm(){
                         return "transparent";
                 }
         }
-    
+
 
     if(nodeSelect.length > 0){
         nameText.innerHTML = nodeSelect[0].data.n;
-        
+
         if(nodeSelect[0].data.s == 'F'){
             genderText.innerHTML = "หญิง";
             nodeimg.src = "img/femalenode.png";
@@ -315,14 +317,14 @@ function setInfoForm(){
             nodeimg.src = "img/malenode.png";
         }
         attr.innerHTML ="";
-        
+
         if(nodeSelect[0].data.a){
            // alert(JSON.stringify(nodeSelect[0].data));
             diseases.style.visibility='visible';
              var rip = false;
             for(var i =0 ; i<nodeSelect[0].data.a.length;i++){
                 var ai = nodeSelect[0].data.a[i];
-               
+
                 if(ai == 'S'){
                     rip =true;
                 }
@@ -335,7 +337,7 @@ function setInfoForm(){
             }
             if(rip){
                 attr.innerHTML += '<br><p> สถานะ : '+getNameAttr(ai)+'</p></br>';
-                
+
             }
         }
         else{
@@ -346,23 +348,23 @@ function setInfoForm(){
         nameText.innerHTML ="";
         genderText.innerHTML="";
         attr.innerHTML ="";
-        
+
     }
-    
+
     var attr = nodeSelect[0].data.aobj;
     //setimg attr
-    
+
         if(attr){
            // alert(JSON.stringify(nodeSelect[0].data));
-            
+
             for(var i =0 ; i<attr.length;i++){
                 var ai = attr[i].attr;
-               
+
                 if(ai == 'S'){
                     rip =true;
                 }
                 else{
-                    
+
                     if(i<4){
                     attrimg[i].style.backgroundColor = attrFill(attr[i]);
                 }
@@ -370,16 +372,16 @@ function setInfoForm(){
             }
             if(rip){
               //  attr.innerHTML += '<br><p> สถานะ : '+getNameAttr(ai)+'</p></br>';
-                
+
             }
-   
+
     }else{
    //     nameText.innerHTML ="";
        // genderText.innerHTML="";
      //   attr.innerHTML ="";
-        
+
     }
-    
+
 }
 
 
