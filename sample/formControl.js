@@ -115,10 +115,13 @@ function clickNode(ctrl, node) {
   //  var arrCou = this.myDiagram.findMarriageArray(node.data.key); //console.log(JSON.stringify(arrCou));
 
     //addSon
- //this.myDiagram.addSon(node);
+ this.myDiagram.addSon(node);
     //***********for open file ********
-    var aaa = this.myDiagram.getOriginalArray();
-    console.log(JSON.stringify(aaa["5"]));
+  ///  var aaa = this.myDiagram.getOriginalArray();
+  ///  console.log(JSON.stringify(aaa["5"]));
+
+//this.myDiagram.getDataNodeToNewArray();
+
 
    //.myDiagram.addDaughter(node);
   //  this.myDiagram.load();
@@ -141,10 +144,11 @@ function search(){
 
 
 function clickDiagram() {
+  //this.myDiagram.undoDiagram();
    // this.myDiagram.setupRelationship();
    // this.myDiagram.load();
    // setInfoForm();
-    this.myDiagram.makeImage();
+    //this.myDiagram.makeImage();
 }
 
 

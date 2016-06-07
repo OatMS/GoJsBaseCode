@@ -24,7 +24,7 @@
 "โรคอ้วน.png",
 "โรคเบาหวาน",
 "โรคเอดส์ - HIV",
-"โรคไขข้อ"     
+"โรคไขข้อ"
 );
 
 
@@ -90,26 +90,26 @@ else{
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    
+
      <script src="go.js"></script>
      <script src="enGeno.js"></script>
      <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
-     
+
    <!-- you don't need to use this -->
   <script src="goSamples.js"></script>  <!-- this is only for the GoJS Samples framework -->
       <script src="enGeno.js"></script>
   <script src="goSamples.js"></script>  <!-- this is only for the GoJS Samples framework -->
       <script src="formControl.js"></script>
-    
+
 </head>
 
 
 
-   
+
    <body id="bodyindex" onload="<?
                                 if($_GET['startType']=="import") echo "genGramFormFile();";
                                 else echo "setdata();";
-         
+
          ?>" >
     <div id="header">
         <img src="img/logo.png" id="logo">
@@ -120,79 +120,79 @@ else{
         <div id="elementTools">
             <div id='cssmenu'>
                 <ul>
-                
+
                 <li class='has-sub'><a href='#'>สัญลักษณ์สมาชิก</a>
                         <ul>
                            <div style="text-align:center" >
      <?
-               $i=0;         
+               $i=0;
         for($i=0;$i<4;$i++ ){
        echo    "<a style='display:inline' title='".$altimgattr[$i]."' >";
            echo "<img id='attrimg'   src='img/node/";
         echo    $i+1;
         echo    ".png' /> ";
-  
+
          echo "  </a>";
         }
-    
+
     ?>
-                        </div>       
+                        </div>
                         </ul>
                     </li>
-                 
+
                     <li class='active has-sub'><a href='#'>สัญลักษณ์</a>
                         <ul>
                            <div style="text-align:center" >
      <?
-               $i=0;         
+               $i=0;
         for($i=0;$i<24;$i++ ){
        echo    "<a style='display:inline' title='".$altimgattr[$i]."' >";
            echo "<img id='attrimg'   src='img/attr/";
         echo    $i+1;
         echo    ".png' /> ";
-  
+
          echo "  </a>";
         }
-    
+
     ?>
-                        </div>       
+                        </div>
                         </ul>
                     </li>
-                    
+
                     <li class='has-sub'><a href='#'>เส้นความสัมพันธ์</a>
                         <ul>
                            <div style="text-align:center" >
      <?
-               $i=0;         
+               $i=0;
         for($i=0;$i<34;$i++ ){
-     
+
             echo    "<a style='display:inline' title='".$altimgline[$i]."' >";
            echo "<img id='attrimg'   src='img/line/";
         echo    $i+1;
         echo    ".png' /> ";
-  
+
          echo "  </a>";
     }
-    
-    
+
+
     ?>
-                        </div>       
+                        </div>
                         </ul>
                     </li>
-                    
+
                     <li class='has-sub'><a href='#'>ค้นหา</a>
                         <ul>
                            <div style="text-align:center" >
                            <input type="text" id="keyword" name="keyword" >
                            <input type="button" onclick="search()" value="ค้นหา" >
                            <input type="button" onclick="testHighlight()" value="Highlight" >
-                        </div>       
+                        </div>
                         </ul>
                     </li>
-                    
+
                 </ul>
             </div>
-            
+
             <div id="filter" style="background-color:white;">
                <h3 style="text-align:center">Filter</h3>
                 <div class="col-md-6"   style="background-color:white;">
@@ -203,9 +203,9 @@ else{
         <input id="E" onclick="setFilter()" type="checkbox" name="Attribute" value="E"> โรคความดันสูง <br>
         <input id="F" onclick="setFilter()" type="checkbox" name="Attribute" value="F"> HIV / เอดส์ <br9>
         </div>
-        
+
         <div class="col-md-6"  style="background-color:white;">
-        
+
         <input id="G" onclick="setFilter()" type="checkbox" name="Attribute" value="G"> โรคตับอักเสบ <br>
         <input id="H" onclick="setFilter()" type="checkbox" name="Attribute" value="H"> โรคเบาหวาน <br>
         <input id="I" onclick="setFilter()" type="checkbox" name="Attribute" value="I"> โรคไขข้อ <br>
@@ -214,69 +214,69 @@ else{
         <input id="L" onclick="setFilter()" type="checkbox" name="Attribute" value="L"> โรคติดต่อทางเพศสัมพันธ์ <br>
         </div>
             </div>
-            
-            
-            
-            
+
+
+
+
         </div>
 
 <!-- Button Openfilt -->
-     
+
 
         <div id="myDiagram">
 
         </div>
-        
-        <div id="infoNode" >
-    
 
-     
-     
-     
+        <div id="infoNode" >
+
+
+
+
+
      <!------- Info Form --------->
       <div class="form" id="infoForm">
-         
+
         <h2 style="">ข้อมูลสมาชิกครอบครัว</h2>
-        
-        
+
+
         <div  style=" position: relative; margin-left:50px; width:150px; height:150px; ">
-            
+
             <div id="attrimg1" style=" width:75px; height:75px; float:left "></div>
             <div id="attrimg2" style=" width:75px; height:75px; float:left "></div>
             <div id="attrimg3" style=" width:75px; height:75px; float:left "></div>
             <div id="attrimg4" style=" width:75px; height:75px; float:left "></div>
-            
+
             <img src="img/femalenode.png" id="nodeimg" style="position: absolute; top:0px; left:0px;">
         </div>
         <form >
          <h3>ชื่อ : .....<span id="nameText" > </span>.... </h3>
          <h3>เพศ : .....<span id="genderText" > </span>.... </h3>
-         
-         
-        
-         
+
+
+
+
          <h3 id="diseases"> โรค</h3>
          <div id="attr" style="padding-left:50px;">
-             
+
          </div>
-         
+
         </form>
      </div>
-     
-         
+
+
     <!-- ----- edit Form ------------------->
      <div class="form" id="editForm" hidden>
-         
+
         <h2 style="">ข้อมูลสมาชิกครอบครัว</h2>
         <img src="img/mockup/node.PNG" style="margin-left:50px;">
-        
+
         <form  >
          <h3>ชื่อ   </h3>
-         
+
          <input type="text" id="nameNode">
-         
+
          <h3>โรค</h3>
-        <!-- 
+        <!--
          <div class="col-md-6">
          <input id="A"  type="checkbox" name="Attribute" value="A" >ภาวะซึมเศร้า<br>
         <input id="B" type="checkbox" name="Attribute" value="B"> ภาวะโรคอ้วน<br>
@@ -285,9 +285,9 @@ else{
         <input id="E" type="checkbox" name="Attribute" value="E"> โรคความดันสูง <br>
         <input id="F" type="checkbox" name="Attribute" value="F"> HIV / เอดส์ <br9>
         </div>
-        
+
         <div class="col-md-6">
-        
+
         <input id="G" type="checkbox" name="Attribute" value="G"> โรคตับอักเสบ <br>
         <input id="H" type="checkbox" name="Attribute" value="H"> โรคเบาหวาน <br>
         <input id="I" type="checkbox" name="Attribute" value="I"> โรคไขข้อ <br>
@@ -296,20 +296,20 @@ else{
         <input id="L" type="checkbox" name="Attribute" value="L"> โรคติดต่อทางเพศสัมพันธ์ <br>
         </div>
         -->
-        
+
         </form>
-    
+
      </div>
-      
-      
+
+
   </div>
-  
+
 
     </div>
-    
-    
+
+
     <div id='imgdiv'></div>
-    
+
     <menu id="ctxMenu">
     <menu title="File">
         <menu onclick="addSon" title="addSon"></menu>
@@ -331,14 +331,14 @@ else{
 
 <!-- //****************** JS ****************** -->
 <script>
-    
+
    function genGramFormFile(){
        console.log('Gen Gram Form data');
-       
+
        var data = getUrlVars()["data"];
       // var data = $_GET("data");
       // alert(typeof data);
-       
+
        data =  decodeURI(data);
         data =  decodeURIComponent(data);
         data = data.replace("+","");
@@ -347,10 +347,10 @@ else{
        data = JSON.parse(data);
        alert(data);
        console.log(data);
-      
+
         createDi(data);
    }
-    
+
     function fakeData(){
         var data = [
     { key: 0, n: "Aaron", s: "M",  cou: 1, a: ["C", "F", "K"],age:20},
@@ -377,12 +377,12 @@ else{
     { key: 21, n: "Felicia", s: "F", m: 12, f: 13, a: ["H"] },
     { key: 22, n: "Frank", s: "M", m: 12, f: 13, a: ["B", "H"] }
 
- 
+
 ];
         createDi(data);
     }
-    
-    
+
+
     function getUrlVars() {
 var vars = {};
 var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
@@ -390,7 +390,7 @@ vars[key] = value;
 });
 return vars;
 }
-    
+
     function setdata(){
         var attr ="<? echo $_GET['attr'] ?>";
         attr = attr.split("");
@@ -401,20 +401,20 @@ return vars;
                     },
                     //mother
                     {
-                        key:2,n:"Mom",s:"F",cou:3
+                        key:2,n:"แม่",s:"F",cou:3
                     },
                     //father
                     {
-                        key:3,n:"Dad",s:"M",cou:2
+                        key:3,n:"พ่อ",s:"M",cou:2
                     }
                         ];
- 
+
         createDi(userdata);
     }
-    
-    
-    
-    
+
+
+
+
     //**************************************
 
 

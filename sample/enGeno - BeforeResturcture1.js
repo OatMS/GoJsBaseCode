@@ -70,7 +70,6 @@ GenogramLayout.prototype.add = function (net, coll, nonmemberonly) {
         if (nonmemberonly && link.containingGroup !== null) continue;
         // if it's a parent-child link, add a LayoutEdge for it
         if (!link.isLabeledLink) {
-            console.log(link.isLabeledLink);
             var parent = net.findVertex(link.fromNode); // should be a label node
             var child = net.findVertex(link.toNode);
             if (child !== null) { // an unmarried child
@@ -220,8 +219,7 @@ var enGeno = class {
                 originArray[""+data[i].key] = JSON.parse(JSON.stringify(data[i]));
 
             }
-            
-            //originArray.splice(0, 1);
+            originArray.splice(0, 1);
           //  this.undoStack.push(JSON.parse(JSON.stringify(originArray)));
             return originArray;
 
@@ -229,7 +227,7 @@ var enGeno = class {
         }
 
         this.pushObjInOriginalArray = function (obj) {
-            originArray[""+obj.key] = JSON.parse(JSON.stringify(obj));
+            originArray.push(""+obj.key=>JSON.parse(JSON.stringify(obj));
         }
         this.getOriginalArray = function () {
             var arr = JSON.parse(JSON.stringify(originArray));
@@ -1168,7 +1166,7 @@ enGeno.prototype.addChild = function (node, gender, data, couKey) {
 
     this.pushObjInOriginalArray(newnode);
     //this.pushChangedArrayIntoHistory();
-   //******RUN this.setupDiagram();
+    this.setupDiagram();
 
 /*
     this.diagram.startTransaction("add child");
@@ -1196,30 +1194,6 @@ enGeno.prototype.addChild = function (node, gender, data, couKey) {
     this.diagram.commitTransaction("add child");
 
 */
-    this.diagram.startTransaction("add child");
-  
-            var data = newnode;
-            var key = newnode.key;
-            var mother = newnode.m;
-            var father = newnode.f;
-    
-    this.diagram.model.addNodeData(this.copyJSON(newnode));
-    var link = this.findMarriage(keyCou,newnode.key); ;
-            if (mother !== undefined && father !== undefined) {
-                var link = this.findMarriage(mother, father);
-                
-                var mdata = link.data;
-                console.log(link.data.key);
-                var mlabkey = mdata.labelKeys[0];
-                console.log(link.data.labelKeys[0]);
-                var cdata = {
-                    from: mlabkey,
-                    to: key
-                };
-                this.diagram.model.addLinkData(cdata);
-            }
- 
-    this.diagram.commitTransaction("add child");
 
 }
 
@@ -1263,7 +1237,7 @@ enGeno.prototype.addSpouse = function (node, data) {
     this.pushObjInOriginalArray(newnode);
 
 
-
+/*
     this.diagram.startTransaction("add Spouse");
    this.diagram.model.addNodeData(this.copyJSON(newnode));
    var mlab = {
@@ -1281,10 +1255,11 @@ enGeno.prototype.addSpouse = function (node, data) {
    this.diagram.model.addLinkData(mdata)
    this.diagram.commitTransaction("add Spouse");
 
+*/
 
 
 
-// this.setupDiagram();
+ this.setupDiagram();
 //  this.reDiagram();
     console.log("Add Node Spouse");
     return key;
