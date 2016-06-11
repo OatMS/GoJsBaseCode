@@ -101,7 +101,32 @@ function downloadImage(){
     var img = this.myDiagram.makeImage();
     link.href = img.src;
 }
+//************ context function **********
+function diagramAddSon(){
+    var sel = this.myDiagram.getSelectedNodes();
+    for(var i=0;i<sel.length;i++){
+        this.myDiagram.addSon(sel[i]);
+    }
+    
+}
 
+function diagramAddDaughter(){
+    var sel = this.myDiagram.getSelectedNodes();
+    for(var i=0;i<sel.length;i++){
+        this.myDiagram.addDaughter(sel[i]);
+    }
+}
+function diagramDeleteNode(){
+    var sel = this.myDiagram.getSelectedNodes();
+    for(var i=0;i<sel.length;i++){
+        this.myDiagram.removeNode(sel[i]);
+    }
+}
+function diagramUndo(){
+    this.myDiagram.undo();
+}
+
+//**************end context *********
 
 function setupForm() {
     Form = document.getElementById("infoNode");
@@ -121,14 +146,15 @@ function clickNode(ctrl, node) {
     //this.myDiagram.filter("AB");
 
 //this.myDiagram.addSpouse(node);
-
+diagramAddSon();
     //console.log(this.myDiagram.genKey());
 
   //  var arrCou = this.myDiagram.findMarriageArray(node.data.key); //console.log(JSON.stringify(arrCou));
 
     //addSon
  //this.myDiagram.addSon(node);
- this.myDiagram.export();
+ //this.myDiagram.export();
+ //   this.myDiagram.removeNode(node);
     //***********for open file ********
   ///  var aaa = this.myDiagram.getOriginalArray();
   ///  console.log(JSON.stringify(aaa["5"]));
