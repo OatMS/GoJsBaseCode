@@ -91,6 +91,18 @@ function createDi(usrdata) {
 
 }
 
+function downloadTxtFile(){
+    var link = document.getElementById("download-txt");
+    link.href = this.myDiagram.export();
+}
+
+function downloadImage(){
+     var link = document.getElementById('download-img');
+    var img = this.myDiagram.makeImage();
+    link.href = img.src;
+}
+
+
 function setupForm() {
     Form = document.getElementById("infoNode");
     editForm = document.getElementById("editForm");
@@ -115,7 +127,8 @@ function clickNode(ctrl, node) {
   //  var arrCou = this.myDiagram.findMarriageArray(node.data.key); //console.log(JSON.stringify(arrCou));
 
     //addSon
- this.myDiagram.addSon(node);
+ //this.myDiagram.addSon(node);
+ this.myDiagram.export();
     //***********for open file ********
   ///  var aaa = this.myDiagram.getOriginalArray();
   ///  console.log(JSON.stringify(aaa["5"]));
@@ -149,6 +162,7 @@ function clickDiagram() {
    // this.myDiagram.load();
    // setInfoForm();
     //this.myDiagram.makeImage();
+    downloadImage();
 }
 
 

@@ -46,9 +46,9 @@ label.image-radio input[type="radio"]:checked + img{
 
 
 #myDiagram {
-    
-    width:55%;
-    height:650px; 
+    margin-top: 50px;
+    width:100%;
+    height:600px; 
     float:left;
    background-color: white;
    
@@ -250,4 +250,13 @@ border-bottom: solid whitesmoke 1px;
 /*  ---------------- end css menu bar--------------------*/
 
 
-/* ---------------- Context-----------------------   
+/* ---------------- Context-----------------------  */ 
+
+
+.diagram-icon {
+    width:30px; 
+    height:30px;
+    margin-top:10px; 
+    margin-right:10px;
+    float:right;
+}

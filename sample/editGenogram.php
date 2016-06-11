@@ -222,9 +222,19 @@ else{
 
 <!-- Button Openfilt -->
 
+        <div style="width:60%;
+    height:650px; 
+    float:left;position:relative; background-color:white;" >
+            <a id="download-txt" download="genogram-info.txt">
+             <image class="diagram-icon" id="icon-export" src="img/download-icon.png" onclick="downloadTxtFile()" >
+             </a>
+           <a id="download-img" download="genogram.png">
+           <image class="diagram-icon" id="icon-png" src="img/png-icon.png" onclick="downloadImage()" >
+           </a>
+        <div id="myDiagram"  >
 
-        <div id="myDiagram">
-
+        </div>
+            
         </div>
 
         <div id="infoNode" >

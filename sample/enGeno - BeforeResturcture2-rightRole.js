@@ -190,8 +190,6 @@ GenogramLayout.prototype.findParentsMarriageLabelNode = function (node) {
 //------------------------------------API----------------------
 
 
-//
-
 var enGeno = class {
 
 
@@ -202,10 +200,12 @@ var enGeno = class {
         var contextNode;
         var nodeOnRightClicked;
         //  this.setContextNode();
+        var undoStack;
+        var redoStack;
         var originArray = setOriginalArray(data);
 
         function setOriginalArray(data) {
-
+            undoStack =[];
             originArray = [];
             for (var i = 0; i < data.length; i++) {
                 if (data[i].m && typeof data[i].m == "string") data[i].m = parseInt(data[i].m);
@@ -220,8 +220,9 @@ var enGeno = class {
                 originArray[""+data[i].key] = JSON.parse(JSON.stringify(data[i]));
 
             }
-
+            
             //originArray.splice(0, 1);
+          //  this.undoStack.push(JSON.parse(JSON.stringify(originArray)));
             return originArray;
 
 
@@ -747,8 +748,6 @@ var enGeno = class {
         var array = this.getOriginalArray();
         console.log("setupDi originArray  = " + JSON.stringify(this.getOriginalArray()));
 
-
-
         //********** change object ***********
 
         var newdata = array;
@@ -1003,7 +1002,24 @@ console.log("Arter setupDi originArray  = " + JSON.stringify(this.getOriginalArr
         this.setupDiagram(1);
     };
 
+    pushChangedArrayIntoHistory(){
+      var arr = this.getOriginalArray();
+      this.undoStack.push(arr);
+    }
 
+    undoDiagram(){
+      hisArr = copyJSON(undoStack.pop());
+      redoStack.push(copyJSON(hisArr));
+      this.setOriginalArray(hisArr);
+      this.setupDiagram();
+    }
+
+    redoDiagram(){
+      hisArr = copyJSON(this.redoStack.pop());
+      this.undoStack.push(copyJSON(hisArr));
+      this.setOriginalArray(hisArr);
+      this.setupDiagram();
+    }
 }
 
 
@@ -1181,17 +1197,17 @@ enGeno.prototype.addChild = function (node, gender, data, couKey) {
 
 */
     this.diagram.startTransaction("add child");
-
+  
             var data = newnode;
             var key = newnode.key;
             var mother = newnode.m;
             var father = newnode.f;
-
+    
     this.diagram.model.addNodeData(this.copyJSON(newnode));
     var link = this.findMarriage(keyCou,newnode.key); ;
             if (mother !== undefined && father !== undefined) {
                 var link = this.findMarriage(mother, father);
-
+                
                 var mdata = link.data;
                 console.log(link.data.key);
                 var mlabkey = mdata.labelKeys[0];
@@ -1202,7 +1218,7 @@ enGeno.prototype.addChild = function (node, gender, data, couKey) {
                 };
                 this.diagram.model.addLinkData(cdata);
             }
-
+ 
     this.diagram.commitTransaction("add child");
 
 }
@@ -1439,30 +1455,7 @@ enGeno.prototype.searchByKeyWord = function (keyword) {
             var comment = "" + arr[i].comment;
             var reg = new RegExp(keyword, "gi");
             var n = comment.search(reg);
-            var strAttr;
-            var found=false;
-
-            if (keyword =="ซึมเศร้า")strAttr="A";
-            else if(keyword == "โรคอ้วน" ) strAttr="ฺB";
-            else if(keyword == "มะเร็ง") strAttr="C";
-            else if(keyword == "หัวใจ") strAttr="D";
-            else if(keyword == "ความดันสูง") strAttr="E";
-            else if(keyword == "เอดส์" || keyword == "HIV"|| keyword == "hiv") strAttr="F";
-            else if(keyword == "ตับอักเสบ") strAttr="G";
-            else if(keyword == "เบาหวาน") strAttr="H";
-            else if(keyword == "ไขข้อ") strAttr="I";
-            else if(keyword == "ออทิสติก") strAttr="J";
-            else if(keyword == "อัลไซเมอร์") strAttr="K";
-            else if(keyword == "โรคติดต่อทางเพศสัมพันธ์") strAttr="L";
-            else if(keyword == "เสียชีวิต"||keyword == "ตาย") strAttr="S";
-
-            if(strAttr){
-                var index = arr.indexOf(strAttr);
-                if(index>=0)found=true;
-            }
-
-
-            if (n >= 0 || found) {
+            if (n >= 0) {
                 arrResult.push({
                     key: arr[i].key,
                     pos: n
@@ -1480,7 +1473,7 @@ enGeno.prototype.searchByKeyWord = function (keyword) {
     }
     //********** make img****************
 enGeno.prototype.makeImage = function (para1, para2) {
-   
+    var imgDiv = document.getElementById('imgdiv');
     var db = this.diagram.documentBounds.copy();
     var boundswidth = db.width;
     var boundsheight = db.height;
@@ -1496,24 +1489,25 @@ enGeno.prototype.makeImage = function (para1, para2) {
         var scale = para1;
         var img = this.diagram.makeImage({
             scale: scale,
-            type: "image/png",
+            type: "image/jpg",
             size: new go.Size(boundswidth * scale + 100, boundsheight * scale + 100),
-            background: "transparent"
+            background: "white"
         });
     } else {
         var scale1 = para1 / boundswidth;
         var scale2 = para2 / boundsheight;
         var img = this.diagram.makeImage({
             scale: (scale1 < scale2) ? scale1 : scale2,
-            type: "image/png",
+            type: "image/jpeg",
             size: new go.Size(para1 + 100, para2 + 100),
-            background: "transparent"
+            background: "white"
         });
         console.log('in 2');
     }
 
     // img.className  = "images";
-    return img;
+
+    imgDiv.appendChild(img);
 }
 
 
@@ -1610,48 +1604,8 @@ enGeno.prototype.setupRelationship = function () {
 
 
 //************** Open Form File ***************
-enGeno.prototype.export = function(filepath){
 
-  var arr = this.getDataNodeToNewArray();
-	var txtFile = [];
-  //for every node
-  for(var i=0 ;i<arr.length;i++){
-    //every attribute in each node
-    var node = arr[i];
-    var str ="";
-    var size = Object.keys(node).length;
-    var num=1;
-    for(var attr in node){
-      var value="";
-    //  console.log(typeof node[""+attr]);
-      if(typeof node[""+attr] =="object"){
-        for(var j=0;j<node[""+attr].length;j++){
-          value += node[""+attr][j];
-        }
-      }else {
-        value=node[""+attr]
-      }
-      str+= ""+attr+":"+value;
 
-      if(num<size) str+=",";
-      num++;
-    }
-      if(i<arr.length-1) str +='\r\n';
-    txtFile.push(str);
-  }
-  console.log(txtFile);
-
-    var file=null;
-    var data  = new File(txtFile, {type: 'plain/text'});
-    // If we are replacing a previously generated file we need to
-    // manually revoke the object URL to avoid memory leaks.
-    if (file !== null) {
-      window.URL.revokeObjectURL(file);
-    }
-    file = window.URL.createObjectURL(data);
-    return file;
-
-}
 
 
 
