@@ -102,6 +102,16 @@ function downloadImage(){
     link.href = img.src;
 }
 //************ context function **********
+function contextFunction(e,obj){
+    //if(e.text == "add daughter")
+    console.log("in function");
+        var sel = this.myDiagram.getSelectedNodes();
+    for(var i=0;i<sel.length;i++){
+        this.myDiagram.addDaughter(sel[i]);
+    }
+}
+
+
 function diagramAddSon(){
     var sel = this.myDiagram.getSelectedNodes();
     for(var i=0;i<sel.length;i++){
@@ -295,7 +305,7 @@ function getNameAttr(a){
 
 //********** set info form************
 function setInfoForm(){
-     var nodeSelect =   this.myDiagram.getSelectedNode();
+     var nodeSelect =   this.myDiagram.getSelectedNodes();
     var nameText = document.getElementById("nameText");
     var genderText = document.getElementById("genderText");
     var infoForm = document.getElementById("infoForm");

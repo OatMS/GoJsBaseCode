@@ -299,6 +299,23 @@ var enGeno = class {
                     columnSpacing: 10
                 })
             });
+        
+        //************* context diagram ************
+        this.diagram.contextMenu =
+    $(go.Adornment, "Vertical",
+      $("ContextMenuButton",
+        $(go.TextBlock, "    Undo    "),
+        { click: function(e, obj) { e.diagram.commandHandler.undo(); } },
+        new go.Binding("visible", "", function(o) {
+                                          return o.diagram.commandHandler.canUndo();
+                                        }).ofObject()),
+      $("ContextMenuButton",
+        $(go.TextBlock, "   Redo   "),
+        { click: function(e, obj) { e.diagram.commandHandler.redo(); } },
+        new go.Binding("visible", "", function(o) {
+                                          return o.diagram.commandHandler.canRedo();
+                                        }).ofObject())
+    );
 
         //click Listener **candelete**
         this.diagram.addDiagramListener("ObjectSingleClicked",
@@ -506,7 +523,7 @@ this.diagram.nodeTemplateMap.add("I", // male
                     click: function (e, node) {
                             clickNode(e, node)
                         }
-            //,contextMenu:this.contextNode
+           ,contextMenu:this.contextNode
                         //this.setRightClickedNode // define a context menu for each node
                 },
                 $(go.Panel, {
@@ -1144,15 +1161,10 @@ enGeno.prototype.setContextNode = function () {
     this.contextNode = $(go.Adornment, "Vertical", // that has one button
         $("ContextMenuButton",
             $(go.TextBlock, "add daughter"), {
-                click: (function(e, obj){
-                    contextFunction(e, obj);
-                })
+                click:contextFunction 
             }
         ));
         
-        function contextFunction(e, obj){
-            addSon(obj);
-        }
 
 }
 

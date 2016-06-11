@@ -231,7 +231,7 @@ else{
            <a id="download-img" download="genogram.png">
            <image class="diagram-icon" id="icon-png" src="img/png-icon.png" onclick="downloadImage()" >
            </a>
-        <div class="task" id="myDiagram"  >
+        <div class="" id="myDiagram"  >
 
         </div>
             
