@@ -593,7 +593,7 @@ this.diagram.nodeTemplateMap.add("I", // male
                     click: function (e, node) {
                             clickNode(e, node)
                         }
-               // ,contextMenu:this.contextNode
+                ,contextMenu:this.contextNode
                         // ,rightCl: this.setRightClickedNode
                 },
 
@@ -1133,37 +1133,31 @@ enGeno.prototype.changeNodeData = function (node, obj) {
 //on righr click have a function
 enGeno.prototype.setContextNode = function () {
 
-   /* this.contextNode = $(go.Adornment, "Vertical", // that has one button
+   this.contextNode = $(go.Adornment, "Vertical", // that has one button
+        $("ContextMenuButton",
+            $(go.TextBlock, "add spouse"), {
+               click:contextFunction 
+            }
+        ),
         $("ContextMenuButton",
             $(go.TextBlock, "add daughter"), {
-                click: this.addChild
+               click:contextFunction 
             }
         ),
         $("ContextMenuButton",
             $(go.TextBlock, "add son"), {
-                click: this.addChild
+                click:contextFunction 
             }
         ),
         $("ContextMenuButton",
-            $(go.TextBlock, "add spouse"), {
-                click: this.addSpouse
-            }
-        ),
-        $("ContextMenuButton",
-            $(go.TextBlock, "Edit Node"), {
-                click: this.editNode
+            $(go.TextBlock, "remove Node"), {
+                click:contextFunction 
             }
         )
 
         // more ContextMenuButtons would go here
-    );*/
+    );
     
-    this.contextNode = $(go.Adornment, "Vertical", // that has one button
-        $("ContextMenuButton",
-            $(go.TextBlock, "add daughter"), {
-                click:contextFunction 
-            }
-        ));
         
 
 }
@@ -1314,7 +1308,8 @@ enGeno.prototype.addDaughter = function (node, data) {
 enGeno.prototype.addSpouse = function (node, data) {
 
  console.log("Before origin array = "+JSON.stringify(this.getOriginalArray()));
-
+    
+    if(this.findMarriageArray(node.data.key).length >0 ) return null
     // var node = b.part.adornedPart;
     var data = data;
     var key = this.genKey();

@@ -103,37 +103,26 @@ function downloadImage(){
 }
 //************ context function **********
 function contextFunction(e,obj){
-    //if(e.text == "add daughter")
-    console.log("in function");
+    var text = obj.elt(1).text;
         var sel = this.myDiagram.getSelectedNodes();
+    if(text == "add daughter"){
     for(var i=0;i<sel.length;i++){
         this.myDiagram.addDaughter(sel[i]);
-    }
-}
-
-
-function diagramAddSon(){
-    var sel = this.myDiagram.getSelectedNodes();
+    }}
+    else if(text == "add spouse"){
+    for(var i=0;i<sel.length;i++){
+        this.myDiagram.addSpouse(sel[i]);
+    }}
+    else if(text == "add son"){
     for(var i=0;i<sel.length;i++){
         this.myDiagram.addSon(sel[i]);
-    }
+    }}
     
-}
-
-function diagramAddDaughter(){
-    var sel = this.myDiagram.getSelectedNodes();
-    for(var i=0;i<sel.length;i++){
-        this.myDiagram.addDaughter(sel[i]);
-    }
-}
-function diagramDeleteNode(){
-    var sel = this.myDiagram.getSelectedNodes();
+    else if(text == "remove Node"){
     for(var i=0;i<sel.length;i++){
         this.myDiagram.removeNode(sel[i]);
-    }
-}
-function diagramUndo(){
-    this.myDiagram.undo();
+    }}
+    
 }
 
 //**************end context *********
